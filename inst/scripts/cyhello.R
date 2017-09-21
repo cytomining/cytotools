@@ -15,3 +15,5 @@ suppressWarnings(suppressMessages(library(cytotools)))
 opts <- docopt(doc)
 
 msgtext <- opts[["msgtext"]]
+
+cytotools::hello(msgtext)
