@@ -1,12 +1,12 @@
 #!/usr/bin/env Rscript
 
-'hello
+"hello
 
 Usage:
 cyhello.R <msgtext>
 
 Options:
--h --help Show this screen.' -> doc
+-h --help Show this screen." -> doc
 
 suppressWarnings(suppressMessages(library(docopt)))
 

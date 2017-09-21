@@ -2,4 +2,4 @@
 cytotools
 =========
 
-The goal of cytotools is provide command-line tools to get things done Using `cytominer`
+`cytotools` provides commandline tools for processing morphological profiling datasets. Most of the functionality is provided using `cytominer`.
