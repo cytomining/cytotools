@@ -16,12 +16,5 @@ knitr::opts_chunk$set(
 
 # cytotools
 
-The goal of cytotools is to ...
+The goal of cytotools is provide command-line tools to get things done Using `cytominer`
 
-## Example
-
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-## basic example code
-```

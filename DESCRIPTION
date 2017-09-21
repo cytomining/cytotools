@@ -1,6 +1,6 @@
 Package: cytotools
 Type: Package
-Title: Commandline Scripts to Get Things Done Using Cytominer
+Title: Command-line Tools to Get Things Done Using Cytominer
 Version: 0.0.0.9000
 Authors@R: c(person("Tim", "Becker", email = "tbecker@broadinstitute.org", role = "aut"),
     person("Shantanu", "Singh", email = "shsingh@broadinstitute.org", role = c("aut", "cre"))
