@@ -1,14 +1,20 @@
 Package: cytotools
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Title: Commandline Scripts to Get Things Done Using Cytominer
+Version: 0.0.0.9000
+Authors@R: c(person("Tim", "Becker", email = "tbecker@broadinstitute.org", role = "aut"),
+    person("Shantanu", "Singh", email = "shsingh@broadinstitute.org", role = c("aut", "cre"))
+  )
+Description: Provides commandline tools for processing morphological profiling
+    datasets. Most of the functionality is provided using `cytominer`.
+Depends:
+    R (>= 3.3.3)
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
 Imports: dplyr
+VignetteBuilder: knitr
 RoxygenNote: 6.0.1
