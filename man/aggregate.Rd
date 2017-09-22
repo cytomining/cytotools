@@ -4,13 +4,13 @@
 \alias{aggregate}
 \title{Aggregate data based on given grouping.}
 \usage{
-aggregate(output_file, sqlite_file, strata = c("Image_Metadata_Plate",
+aggregate(sqlite_file, output_file, strata = c("Image_Metadata_Plate",
   "Image_Metadata_Well"), operation = "median")
 }
 \arguments{
-\item{output_file}{Output file for storing aggregated profiles.}
-
 \item{sqlite_file}{SQLite database storing morphological profiles.}
+
+\item{output_file}{Output file for storing aggregated profiles.}
 
 \item{strata}{character vector specifying grouping variables for aggregation. default \code{c("Image_Metadata_Plate", "Image_Metadata_Well")}.}
 

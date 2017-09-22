@@ -9,8 +9,8 @@
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @export
-aggregate <- function(output_file,
-                      sqlite_file,
+aggregate <- function(sqlite_file,
+                      output_file,
                       strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
                       operation = "median") {
 
