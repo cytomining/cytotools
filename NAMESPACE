@@ -2,4 +2,5 @@
 
 export(aggregate)
 export(hello)
+importFrom(magrittr,"%<>%")
 importFrom(magrittr,"%>%")

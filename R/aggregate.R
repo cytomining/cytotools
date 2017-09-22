@@ -1,35 +1,45 @@
-#' Aggregate morphological profiling data per well.
+#' Aggregate data based on given grouping.
 #'
-#' \code{aggregate} helps you say something.
-#
-#' @param output_file       Output file for aggregated profiles.
-#' @param operation         Methods used for aggregation, mean operation = "median", see cytominer::aggregate
-#' @param strata            grouping variable, default strata = c("Image_Metadata_Plate", "Image_Metadata_Well")
-#' @param sqlite_file       SQLite data base storing morphological profiles.
-
+#' \code{aggregate} aggregates data based on the specified aggregation method.
+#'
+#' @param sqlite_file       SQLite database storing morphological profiles.
+#' @param output_file       Output file for storing aggregated profiles.
+#' @param operation         optional character string specifying method for aggregation. This must be one of the strings \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"median"}.
+#' @param strata            character vector specifying grouping variables for aggregation. default \code{c("Image_Metadata_Plate", "Image_Metadata_Well")}.
 #' @importFrom magrittr %>%
+#' @importFrom magrittr %<>%
 #' @export
-aggregate <- function(sqlite_file, output_file, strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),  operation = "median") {
+aggregate <- function(output_file,
+                      sqlite_file,
+                      strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
+                      operation = "median") {
 
-  # open db
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
+
+  #https://github.com/tidyverse/dplyr/issues/3093
   RSQLite::initExtension(db)
 
-  image <- dplyr::tbl(src = db, "Image") %>%
-    dplyr::select(TableNumber, ImageNumber, Image_Metadata_Plate, Image_Metadata_Well)
+  # columns by which to join image table and objec tables
+  image_object_join_columns <- c("TableNumber", "ImageNumber")
+
+  image <- tbl(src = db, "image") %>%
+    dplyr::select(c(image_object_join_columns, strata))
 
   aggregate_objects <- function(compartment) {
     object <- dplyr::tbl(src = db, compartment)
 
-    object %<>% dplyr::inner_join(image, by = c("TableNumber", "ImageNumber"))
+    object %<>% dplyr::inner_join(image, by = image_object_join_columns)
 
-    # compartment tag converts nuclei to ^Nuclei_
+    # compartment tag converts e.g. nuclei to ^Nuclei_
     compartment_tag <-
-      stringr::str_c("^", stringr::str_sub(compartment, 1, 1) %>% stringr::str_to_upper(), stringr::str_sub(compartment, 2), "_")
+      paste0("^",
+                     stringr::str_sub(compartment, 1, 1) %>%
+                       stringr::str_to_upper(),
+                     stringr::str_sub(compartment, 2), "_")
 
     variables <- colnames(object) %>% stringr::str_subset(compartment_tag)
 
-    futile.logger::flog.info(stringr::str_c("Started aggregating ", compartment))
+    futile.logger::flog.info(paste0("Started aggregating ", compartment))
 
     cytominer::aggregate(
       population = object,
@@ -40,11 +50,12 @@ aggregate <- function(sqlite_file, output_file, strata = c("Image_Metadata_Plate
 
   }
 
-
+  # consider making `compartment` a parameter and then replace the below with
+  # a loop over the components.
   aggregated <-
     aggregate_objects("cells") %>%
     dplyr::inner_join(aggregate_objects("cytoplasm"),
-      by =  strata) %>%
+      by = strata) %>%
     dplyr::inner_join(aggregate_objects("nuclei"),
       by = strata)
 

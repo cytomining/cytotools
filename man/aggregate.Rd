@@ -2,15 +2,20 @@
 % Please edit documentation in R/aggregate.R
 \name{aggregate}
 \alias{aggregate}
-\title{Aggregate morphological profiling data per well.}
+\title{Aggregate data based on given grouping.}
 \usage{
-aggregate(sqlite_file, output_file)
+aggregate(output_file, sqlite_file, strata = c("Image_Metadata_Plate",
+  "Image_Metadata_Well"), operation = "median")
 }
 \arguments{
-\item{sqlite_file}{SQLite data base storing morphological profiles.}
+\item{output_file}{Output file for storing aggregated profiles.}
 
-\item{output_file}{Output file for aggregated profiles.}
+\item{sqlite_file}{SQLite database storing morphological profiles.}
+
+\item{strata}{character vector specifying grouping variables for aggregation. default \code{c("Image_Metadata_Plate", "Image_Metadata_Well")}.}
+
+\item{operation}{optional character string specifying method for aggregation. This must be one of the strings \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"median"}.}
 }
 \description{
-\code{aggregate} helps you say something.
+\code{aggregate} aggregates data based on the specified aggregation method.
 }
