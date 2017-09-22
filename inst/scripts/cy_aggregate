@@ -19,6 +19,6 @@ Arguments:
 opts <- docopt::docopt(doc)
 
 cytotools::aggregate(sqlite_file = opts[["sqlite_file"]],
-                     output_file = opts[["file"]],
+                     output_file = opts[["output"]],
                      operation = opts[["operation"]],
                      strata = stringr::str_split(opts[["strata"]], ",")[[1]])
