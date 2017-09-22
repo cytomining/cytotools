@@ -13,39 +13,42 @@ aggregate <- function(sqlite_file, output_file, strata = c("Image_Metadata_Plate
 
   # open db
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
+  RSQLite::initExtension(db)
 
-  image <- tbl(src = db, "image") %>%
-    select(TableNumber, ImageNumber, Image_Metadata_Plate, Image_Metadata_Well)
+  image <- dplyr::tbl(src = db, "Image") %>%
+    dplyr::select(TableNumber, ImageNumber, Image_Metadata_Plate, Image_Metadata_Well)
 
   aggregate_objects <- function(compartment) {
-    object <- tbl(src = db, compartment)
+    object <- dplyr::tbl(src = db, compartment)
 
-    object %<>% inner_join(image, by = c("TableNumber", "ImageNumber"))
+    object %<>% dplyr::inner_join(image, by = c("TableNumber", "ImageNumber"))
 
     # compartment tag converts nuclei to ^Nuclei_
     compartment_tag <-
-      str_c("^", str_sub(compartment, 1, 1) %>% str_to_upper(), str_sub(compartment, 2), "_")
+      stringr::str_c("^", stringr::str_sub(compartment, 1, 1) %>% stringr::str_to_upper(), stringr::str_sub(compartment, 2), "_")
 
     variables <- colnames(object) %>% stringr::str_subset(compartment_tag)
 
-    futile.logger::flog.info(str_c("Started aggregating ", compartment))
+    futile.logger::flog.info(stringr::str_c("Started aggregating ", compartment))
 
     cytominer::aggregate(
       population = object,
       variables = variables,
       strata = strata,
       operation = operation
-    ) %>% collect()
+    ) %>% dplyr::collect()
+
   }
+
 
   aggregated <-
     aggregate_objects("cells") %>%
-    inner_join(aggregate_objects("cytoplasm"),
-      by = c("Image_Metadata_Plate", "Image_Metadata_Well")) %>%
-    inner_join(aggregate_objects("nuclei"),
-      by = c("Image_Metadata_Plate", "Image_Metadata_Well"))
+    dplyr::inner_join(aggregate_objects("cytoplasm"),
+      by =  strata) %>%
+    dplyr::inner_join(aggregate_objects("nuclei"),
+      by = strata)
 
-  futile.logger::flog.info(paste0("Writing aggregated to ", opts[["output"]]))
+  futile.logger::flog.info(paste0("Writing aggregated to ", output_file))
 
   aggregated %>% readr::write_csv(output_file)
 
