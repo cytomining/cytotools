@@ -3,7 +3,7 @@
 "hello
 
 Usage:
-cyhello.R <msgtext>
+cyhello <msgtext>
 
 Options:
 -h --help Show this screen." -> doc
