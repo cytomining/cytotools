@@ -22,7 +22,7 @@ aggregate <- function(output_file,
   # columns by which to join image table and objec tables
   image_object_join_columns <- c("TableNumber", "ImageNumber")
 
-  image <- tbl(src = db, "image") %>%
+  image <- dplyr::tbl(src = db, "image") %>%
     dplyr::select(c(image_object_join_columns, strata))
 
   aggregate_objects <- function(compartment) {
