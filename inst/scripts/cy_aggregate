@@ -1,0 +1,28 @@
+#!/usr/bin/env Rscript
+
+'aggregate
+
+Usage:
+  aggregate.R <sqlite_file> -o <file>
+
+Options:
+  -h --help                     Show this screen.
+  -o <file> --output=<file>     per-well aggregated data.
+
+Arguments:
+  sqlite_file                   Filename of SQLite data base storing morphological profiling data ' -> doc
+
+suppressWarnings(suppressMessages(library(docopt)))
+
+suppressWarnings(suppressMessages(library(dplyr)))
+
+suppressWarnings(suppressMessages(library(magrittr)))
+
+suppressWarnings(suppressMessages(library(stringr)))
+
+opts <- docopt(doc)
+
+# open db
+db <- dplyr::src_sqlite(path = sqlite_file)
+
+cytotools::aggregate(db = db, output_file = opt[["file"]])
