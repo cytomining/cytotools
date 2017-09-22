@@ -14,7 +14,7 @@ Options:
 Arguments:
   sqlite_file                              Filename of SQLite data base storing morphological profiling data ' -> doc
 
-docopt::docopt(doc, args = "test.sqlite -o test.csv")
+#docopt::docopt(doc, args = "test.sqlite -o test.csv")
 
 opts <- docopt::docopt(doc)
 
