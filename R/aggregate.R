@@ -2,11 +2,18 @@
 #'
 #' \code{aggregate} helps you say something.
 #
-#' @param db                SQLite data base storing morphological profiles.
 #' @param output_file       Output file for aggregated profiles.
+#' @param operation         Methods used for aggregation, mean operation = "median", see cytominer::aggregate
+#' @param strata            grouping variable, default strata = c("Image_Metadata_Plate", "Image_Metadata_Well")
+#' @param sqlite_file       SQLite data base storing morphological profiles.
+
 #' @importFrom magrittr %>%
 #' @export
-aggregate <- function(db, output_file) {
+aggregate <- function(sqlite_file, output_file, strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),  operation = "median") {
+
+  # open db
+  db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
+
   image <- tbl(src = db, "image") %>%
     select(TableNumber, ImageNumber, Image_Metadata_Plate, Image_Metadata_Well)
 
@@ -26,8 +33,8 @@ aggregate <- function(db, output_file) {
     cytominer::aggregate(
       population = object,
       variables = variables,
-      strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
-      operation = "median"
+      strata = strata,
+      operation = operation
     ) %>% collect()
   }
 
@@ -41,4 +48,6 @@ aggregate <- function(db, output_file) {
   futile.logger::flog.info(paste0("Writing aggregated to ", opts[["output"]]))
 
   aggregated %>% readr::write_csv(output_file)
+
+  DBI::dbDisconnect(db)
 }

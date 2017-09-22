@@ -3,11 +3,13 @@
 'aggregate
 
 Usage:
-  aggregate.R <sqlite_file> -o <file>
+  aggregate.R <sqlite_file> -o <file> [-m <method>] [-s <strata>]
 
 Options:
-  -h --help                     Show this screen.
-  -o <file> --output=<file>     per-well aggregated data.
+  -h --help                         Show this screen.
+  -o <file> --output=<file>         per-well aggregated data.
+  -m <method> --operation=<method>  operation used for aggregation, see cytominer::aggregate [default: median]
+  -s <strata> --strata=<strata>     grouping variable [default: Image_Metadata_Plate,Image_Metadata_Well]
 
 Arguments:
   sqlite_file                   Filename of SQLite data base storing morphological profiling data ' -> doc
@@ -22,7 +24,8 @@ suppressWarnings(suppressMessages(library(stringr)))
 
 opts <- docopt(doc)
 
-# open db
-db <- dplyr::src_sqlite(path = sqlite_file)
+strata <- opts[["strata"]]
+strata <- stringr::str_split(strata, ",")[[1]]
 
-cytotools::aggregate(db = db, output_file = opt[["file"]])
+
+cytotools::aggregate(sqlite_file = opt[["sqlite_file"]], output_file = opt[["file"]], method = opts[["method"],  strata = strata)

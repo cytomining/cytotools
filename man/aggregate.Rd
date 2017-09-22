@@ -4,10 +4,10 @@
 \alias{aggregate}
 \title{Aggregate morphological profiling data per well.}
 \usage{
-aggregate(db, output_file)
+aggregate(sqlite_file, output_file)
 }
 \arguments{
-\item{db}{SQLite data base storing morphological profiles.}
+\item{sqlite_file}{SQLite data base storing morphological profiles.}
 
 \item{output_file}{Output file for aggregated profiles.}
 }
