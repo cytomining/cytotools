@@ -12,13 +12,14 @@ Depends:
 License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true
-Suggests: 
+Suggests:
     testthat,
     knitr,
     rmarkdown
-Imports: 
+Imports:
     cytominer (>= 0.0.1),
     DBI (>= 0.7),
+    dbplyr (>= 1.1.0),
     dplyr (>= 0.7.2),
     futile.logger (>= 1.4.3),
     readr (>= 1.1.1),
