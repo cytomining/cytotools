@@ -1,15 +1,4 @@
 context("aggregate")
-# 1. aggregate data stored in a db
-# 2. output is written as csv and loaded after aggregation
-# 3. data is compared to data aggregated using cytominer
-# 4. cleanup: remove out file
-
-# define test data
-#
-#Image_Metadata_Plate,Image_Metadata_Well,Cells_AreaShape_Area,Cells_Intensity_IntegratedIntensity_DNA,Cytoplasm_AreaShape_Area#,Cytoplasm_Intensity_IntegratedIntensity_DNA,Nuclei_AreaShape_Area,Nuclei_Intensity_IntegratedIntensity_DNA
-#SQ00015116,A01,9390,239.51205701963045,6676,65.85157348471694,2788,144.42845508642495
-#SQ00015116,B01,14189.5,263.16674127522856,10475,99.87031544093043,2542,170.05213976930827
-
 
 test_that("`aggregate` aggregates data per well", {
 
