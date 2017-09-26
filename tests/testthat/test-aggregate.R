@@ -24,7 +24,8 @@ test_that("`aggregate` aggregates data per well", {
   # aggregate data and load results
   cytotools::aggregate(sqlite_file, temp_test_file)
 
-  # aggregated <- readr::read_csv(output_file, col_types = "ccdddddd")
+  # load results as data.frame. If you use read_csv use as.data.frame as the
+  # test fails using tibble
   aggregated <- read.csv(file.path(temp_test_file))
 
   results <- data.frame(
