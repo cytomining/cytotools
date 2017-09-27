@@ -3,14 +3,12 @@
 cytotools
 =========
 
-`cytotools` provides command-line tools for processing morphological profiling datasets. Most of the functionality is provided using `cytominer`.
+`cytotools` provides command-line tools for processing morphological profiling 
+datasets. Most of the functionality is provided using `cytominer`.
 
-`cytotools` is the new home for https://github.com/broadinstitute/cytominer_scripts. 
-
-The command-line tools are stored in `inst/scripts`. After installing this package, 
-add this folder to your `PATH`:
+The command-line tools are stored in `inst/scripts`. After installing this 
+package, run the snippet below, and add the output to your `PATH`:
 
 ```{r}
 normalizePath(file.path(path.package("cytotools"), "scripts"))
 ```
-
