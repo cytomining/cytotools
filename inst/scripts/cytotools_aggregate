@@ -1,5 +1,8 @@
 #!/usr/bin/env Rscript
 
+# https://github.com/tidyverse/dplyr/issues/1760
+extends <- methods::extends
+
 'aggregate
 
 Usage:
