@@ -3,7 +3,7 @@
 'aggregate
 
 Usage:
-  aggregate.R <sqlite_file> -o <file> [-m <operation>] [-s <strata>] [-v <variables>]
+  cytotools_hello <sqlite_file> -o <file> [-m <operation>] [-s <strata>] [-v <variables>]
 
 Options:
   -h --help                                Show this screen.
@@ -13,7 +13,7 @@ Options:
   -v <variables> --variables=<variables>   Comma-separated list of observation variables to be aggregated. [default: all]
 
 Arguments:
-  sqlite_file                              Filename of SQLite data base storing morphological profiling data ' -> doc
+  sqlite_file                              Filename of SQLite database storing morphological profiling data ' -> doc
 
 #docopt::docopt(doc, args = "test.sqlite -o test.csv")
 

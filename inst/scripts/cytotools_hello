@@ -1,9 +1,9 @@
 #!/usr/bin/env Rscript
 
-"hello
+"cytotools_hello
 
 Usage:
-cyhello <msgtext>
+cytotools_hello <msgtext>
 
 Options:
 -h --help Show this screen." -> doc
