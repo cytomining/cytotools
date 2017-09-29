@@ -4,17 +4,19 @@
 #'
 #' @param sqlite_file       SQLite database storing morphological profiles.
 #' @param output_file       Output file for storing aggregated profiles.
+#' @param compartments      optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.
 #' @param operation         optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"mean"}.
-#' @param variables         optional character vector specifying observation variables. default \code{"all"}.
 #' @param strata            character vector specifying grouping variables for aggregation. default \code{c("Image_Metadata_Plate", "Image_Metadata_Well")}.
+#' @param variables         optional character vector specifying observation variables. default \code{"all"}.
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @export
 aggregate <- function(sqlite_file,
                       output_file,
-                      variables = "all",
+                      compartments = c("cells", "cytoplasm", "nuclei"),
+                      operation = "mean",
                       strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
-                      operation = "mean") {
+                      variables = "all") {
 
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
 
@@ -26,6 +28,8 @@ aggregate <- function(sqlite_file,
 
   image <- dplyr::tbl(src = db, "image") %>%
     dplyr::select(c(image_object_join_columns, strata))
+
+  append_operation_tag <- function(s) stringr::str_c(s, operation, sep = "_")
 
   aggregate_objects <- function(compartment) {
     object <- dplyr::tbl(src = db, compartment)
@@ -52,18 +56,15 @@ aggregate <- function(sqlite_file,
       variables = variables_,
       strata = strata,
       operation = operation
-    ) %>% dplyr::collect()
-
+    ) %>%
+      dplyr::collect() %>%
+      dplyr::rename_at(variables_, append_operation_tag)
   }
 
-  # consider making `compartment` a parameter and then replace the below with
-  # a loop over the components.
   aggregated <-
-    aggregate_objects("cells") %>%
-    dplyr::inner_join(aggregate_objects("cytoplasm"),
-      by = strata) %>%
-    dplyr::inner_join(aggregate_objects("nuclei"),
-      by = strata)
+    compartments %>%
+    purrr::map(aggregate_objects) %>%
+    purrr::reduce(dplyr::inner_join, by = strata)
 
   futile.logger::flog.info(paste0("Writing aggregated to ", output_file))
 

@@ -6,14 +6,15 @@ extends <- methods::extends
 'aggregate
 
 Usage:
-  cytotools_hello <sqlite_file> -o <file> [-m <operation>] [-s <strata>] [-v <variables>]
+  cytotools_aggregate <sqlite_file> -o <file>  [-c <compartments>] [-m <operation>] [-s <strata>] [-v <variables>]
 
 Options:
-  -h --help                                Show this screen.
-  -o <file> --output=<file>                Output file for storing aggregated profiles.
-  -m <operation> --operation=<operation>   Method for aggregation. [default: mean].
-  -s <strata> --strata=<strata>            Comma-separated list of grouping variables for aggregation. [default: Image_Metadata_Plate,Image_Metadata_Well]
-  -v <variables> --variables=<variables>   Comma-separated list of observation variables to be aggregated. [default: all]
+  -h --help                                         Show this screen.
+  -o <file> --output=<file>                         Output file for storing aggregated profiles.
+  -c <compartments> --compartments=<compartments>   Comma-separated list of cellular compartments. [default: cells,cytoplasm,nuclei].
+  -m <operation> --operation=<operation>            Method for aggregation. [default: mean].
+  -s <strata> --strata=<strata>                     Comma-separated list of grouping variables for aggregation. [default: Image_Metadata_Plate,Image_Metadata_Well]
+  -v <variables> --variables=<variables>            Comma-separated list of observation variables to be aggregated. [default: all]
 
 Arguments:
   sqlite_file                              Filename of SQLite database storing morphological profiling data ' -> doc
@@ -24,6 +25,7 @@ opts <- docopt::docopt(doc)
 
 cytotools::aggregate(sqlite_file = opts[["sqlite_file"]],
                      output_file = opts[["output"]],
+                     compartments = stringr::str_split(opts[["compartments"]], ",")[[1]],
                      operation = opts[["operation"]],
                      variables = stringr::str_split(opts[["variables"]], ",")[[1]],
                      strata = stringr::str_split(opts[["strata"]], ",")[[1]])
