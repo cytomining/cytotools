@@ -57,8 +57,7 @@ aggregate <- function(sqlite_file,
       strata = strata,
       operation = operation
     ) %>%
-      dplyr::collect() %>%
-      dplyr::rename_at(variables_, append_operation_tag)
+      dplyr::collect()
   }
 
   aggregated <-
