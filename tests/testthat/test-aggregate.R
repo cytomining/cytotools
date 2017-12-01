@@ -5,7 +5,7 @@ test_that("`aggregate` aggregates data per well", {
   futile.logger::flog.threshold(futile.logger::WARN)
 
   sqlite_file <-
-    system.file("extdata", "fixture_cytodata_small.sqlite",
+    system.file("extdata", "backend", "batch0", "SQ00015116", "SQ00015116.sqlite",
       package = "cytotools")
 
   temp_test_file <- "temp_test_file.csv"
@@ -60,7 +60,7 @@ test_that("`aggregate` aggregates data per well only in specified compartments",
   futile.logger::flog.threshold(futile.logger::WARN)
 
   sqlite_file <-
-    system.file("extdata", "fixture_cytodata_small.sqlite",
+    system.file("extdata", "backend", "batch0", "SQ00015116", "SQ00015116.sqlite",
                 package = "cytotools")
 
   temp_test_file <- "temp_test_file.csv"
