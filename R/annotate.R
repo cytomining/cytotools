@@ -13,6 +13,7 @@
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract2
+#' @importFrom stats setNames
 #' @export
 annotate <- function(batch_id, plate_id,
                      cell_id = NULL,
