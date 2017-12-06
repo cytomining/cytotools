@@ -33,57 +33,62 @@ annotate <- function(batch_id, plate_id,
   metadata_map <- suppressMessages(
     readr::read_csv(
       paste(metadata_dir, "barcode_platemap.csv", sep = "/"),
-      col_types = cols(Assay_Plate_Barcode = col_character(), Plate_Map_Name = col_character())))
+      col_types = readr::cols(Assay_Plate_Barcode = readr::col_character(), Plate_Map_Name = readr::col_character())))
   testthat::expect_true("Assay_Plate_Barcode" %in% colnames(metadata_map))
   metadata_map %<>% setNames(names(metadata_map) %>% stringr::str_replace_all("^", "Metadata_"))
-  profiles %<>% mutate(Metadata_Assay_Plate_Barcode = as.character(Metadata_Plate))
-  profiles %<>% inner_join(metadata_map, by = c("Metadata_Assay_Plate_Barcode"))
+  profiles %<>% dplyr::mutate(Metadata_Assay_Plate_Barcode = as.character(Metadata_Plate))
+  profiles %<>% dplyr::inner_join(metadata_map, by = c("Metadata_Assay_Plate_Barcode"))
 
   # read and join platemap
-  platemap_name <- profiles %>% select(Metadata_Plate_Map_Name) %>% distinct() %>% magrittr::extract2("Metadata_Plate_Map_Name")
+  platemap_name <- profiles %>%
+    dplyr::select(Metadata_Plate_Map_Name) %>%
+    dplyr::distinct() %>%
+    magrittr::extract2("Metadata_Plate_Map_Name")
   testthat::expect_equal(length(platemap_name), 1)
   platemap <- suppressMessages(readr::read_tsv(paste(metadata_dir, "platemap", paste0(platemap_name, ".txt"), sep = "/")))
   testthat::expect_true("well_position" %in% colnames(platemap))
   if ('plate_map_name' %in% colnames(platemap)) {
-    platemap %<>% select(-plate_map_name)
+    platemap %<>% dplyr::select(-plate_map_name)
   }
   platemap %<>% setNames(names(platemap) %>% stringr::str_replace_all("^", "Metadata_"))
-  profiles %<>% mutate(Metadata_well_position = Metadata_Well)
-  profiles %<>% inner_join(platemap, by = c("Metadata_well_position"))
+  profiles %<>% dplyr::mutate(Metadata_well_position = Metadata_Well)
+  profiles %<>% dplyr::inner_join(platemap, by = c("Metadata_well_position"))
 
   # format_broad_cmap
   if (format_broad_cmap) {
     profiles %<>%
-      mutate(Metadata_pert_id = stringr::str_extract(Metadata_broad_sample, "(BRD[-N][A-Z0-9]+)"),
-             Metadata_pert_mfc_id = Metadata_broad_sample,
-             Metadata_pert_well = Metadata_Well,
-             Metadata_pert_id_vendor = "")
+      dplyr::mutate(Metadata_pert_id = stringr::str_extract(Metadata_broad_sample, "(BRD[-N][A-Z0-9]+)"),
+                    Metadata_pert_mfc_id = Metadata_broad_sample,
+                    Metadata_pert_well = Metadata_Well,
+                    Metadata_pert_id_vendor = "")
 
     if ('Metadata_cell_id' %in% names(profiles)) {
       message('`cell_id` column present in metadata, will not override.')
     } else {
-      profiles %<>% mutate(Metadata_cell_id = cell_id)
+      profiles %<>% dplyr::mutate(Metadata_cell_id = cell_id)
     }
 
     if (perturbation_mode == "chemical") {
       profiles %<>%
-        mutate(Metadata_broad_sample_type = ifelse(is.na(Metadata_broad_sample) | Metadata_broad_sample == "DMSO", "control", "trt"),
-               Metadata_broad_sample = ifelse(Metadata_broad_sample_type =="control", "DMSO", Metadata_broad_sample),
-               Metadata_mmoles_per_liter = ifelse(Metadata_broad_sample_type =="control", 0, Metadata_mmoles_per_liter),
-               Metadata_pert_vehicle = Metadata_solvent) %>%
-        mutate(Metadata_broad_sample_type = ifelse(Metadata_broad_sample == "empty", "empty", Metadata_broad_sample_type))
+        dplyr::mutate(
+          Metadata_broad_sample_type = ifelse(is.na(Metadata_broad_sample) | Metadata_broad_sample == "DMSO", "control", "trt"),
+          Metadata_broad_sample = ifelse(Metadata_broad_sample_type =="control", "DMSO", Metadata_broad_sample),
+          Metadata_mmoles_per_liter = ifelse(Metadata_broad_sample_type =="control", 0, Metadata_mmoles_per_liter),
+          Metadata_pert_vehicle = Metadata_solvent) %>%
+        dplyr::mutate(Metadata_broad_sample_type = ifelse(Metadata_broad_sample == "empty", "empty", Metadata_broad_sample_type))
       if ("Metadata_mg_per_ml" %in% names(profiles)) {
-        profiles %<>% mutate(Metadata_mg_per_ml = ifelse(Metadata_broad_sample_type =="control", 0, Metadata_mg_per_ml))
+        profiles %<>%
+          dplyr::mutate(Metadata_mg_per_ml = ifelse(Metadata_broad_sample_type =="control", 0, Metadata_mg_per_ml))
       }
     }
 
     if (perturbation_mode == "genetic") {
       profiles %<>%
-        mutate(Metadata_broad_sample_type = ifelse(Metadata_pert_name == "EMPTY", "control", "trt"))
+        dplyr::mutate(Metadata_broad_sample_type = ifelse(Metadata_pert_name == "EMPTY", "control", "trt"))
     }
 
     profiles %<>%
-      mutate(Metadata_pert_type = Metadata_broad_sample_type)
+      dplyr::mutate(Metadata_pert_type = Metadata_broad_sample_type)
   }
 
   # external_metadata
@@ -97,9 +102,9 @@ annotate <- function(batch_id, plate_id,
     }
 
     profiles %<>%
-      left_join(
+      dplyr::left_join(
         external_metadata_df %>%
-          distinct()
+          dplyr::distinct()
       )
   }
 
@@ -107,7 +112,7 @@ annotate <- function(batch_id, plate_id,
   if (format_broad_cmap) {
     if ("Metadata_pert_iname" %in% colnames(profiles)) {
       profiles %<>%
-        mutate(Metadata_pert_mfc_desc = Metadata_pert_iname,
+        dplyr::mutate(Metadata_pert_mfc_desc = Metadata_pert_iname,
                Metadata_pert_name = Metadata_pert_iname)
     }
   }
