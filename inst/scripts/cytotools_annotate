@@ -6,7 +6,7 @@ extends <- methods::extends
 'annotate
 
 Usage:
-  annotate.R -b <id> -p <id> [-c <str> -d -j <file> -m <str>]
+  annotate.R -b <id> -p <id> [-c <str> -d -j <file> -m <str> -o <file> -w <file>]
 
 Options:
   -b <id> --batch_id=<id>                 Batch ID.
