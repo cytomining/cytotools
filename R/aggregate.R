@@ -23,7 +23,7 @@ aggregate <- function(sqlite_file,
   #https://github.com/tidyverse/dplyr/issues/3093
   RSQLite::initExtension(db)
 
-  # columns by which to join image table and objec tables
+  # columns by which to join image table and object tables
   image_object_join_columns <- c("TableNumber", "ImageNumber")
 
   image <- dplyr::tbl(src = db, "image") %>%
