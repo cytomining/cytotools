@@ -54,8 +54,8 @@ test_that("`aggregate` aggregates data per well", {
 
 })
 
-test_that("`aggregate` aggregates data per well only in specified compartments",
-          {
+test_that(
+  "`aggregate` aggregates data per well only in specified compartments", {
 
   futile.logger::flog.threshold(futile.logger::WARN)
 

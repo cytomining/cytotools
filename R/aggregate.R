@@ -29,8 +29,6 @@ aggregate <- function(sqlite_file,
   image <- dplyr::tbl(src = db, "image") %>%
     dplyr::select(c(image_object_join_columns, strata))
 
-  append_operation_tag <- function(s) stringr::str_c(s, operation, sep = "_")
-
   aggregate_objects <- function(compartment) {
     object <- dplyr::tbl(src = db, compartment)
 
