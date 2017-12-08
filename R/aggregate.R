@@ -8,6 +8,7 @@
 #' @param operation         optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"mean"}.
 #' @param strata            character vector specifying grouping variables for aggregation. default \code{c("Image_Metadata_Plate", "Image_Metadata_Well")}.
 #' @param variables         optional character vector specifying observation variables. default \code{"all"}.
+#'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @export
