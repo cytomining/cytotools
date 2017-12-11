@@ -8,7 +8,8 @@ test_that("`annotate` adds plate and well metadata", {
            workspace_dir = system.file("extdata", package = "cytotools"))
 
   expected_csv <-
-    system.file("extdata", "backend", "batch0", "SQ00015116", "SQ00015116_augmented.csv",
+    system.file("extdata", "backend", "batch0", "SQ00015116",
+                "SQ00015116_augmented.csv",
                 package = "cytotools")
 
   expected <- readr::read_csv(expected_csv)
@@ -30,7 +31,7 @@ test_that("`annotate` with format_broad_cmap", {
   result <- readr::read_csv(annotated_csv)
 
   # Assert these columns were added:
-  broad_cmap_colnames = c(
+  broad_cmap_colnames <- c(
     "Metadata_pert_id",
     "Metadata_pert_mfc_id",
     "Metadata_pert_well",
