@@ -26,5 +26,11 @@ annotate(batch_id, plate_id, cell_id = NULL, external_metadata = NULL,
 \item{workspace_dir}{Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.}
 }
 \description{
-\code{annotate} adds plate and well metadata, as well as optional external metadata.
+\code{annotate} adds plate and well metadata, as well as optional external
+metadata. It assumes the following files exist:
+- \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the plate
+barcodes to the corresponding platemaps,
+- For each platemap, a file
+\code{<workspace_dir>/metadata/platemap/<plate_map_name>.txt} which
+contains the metadata for each well position
 }
