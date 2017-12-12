@@ -15,7 +15,7 @@ annotate(batch_id, plate_id, cell_id = NULL, external_metadata = NULL,
 
 \item{cell_id}{Optional cell ID. default: \code{NULL}.}
 
-\item{external_metadata}{Optional external metadata to join with, as a JSON file. default: \code{NULL}.}
+\item{external_metadata}{Optional external metadata to join with, as a CSV file. default: \code{NULL}.}
 
 \item{format_broad_cmap}{Add columns for compatibility with Broad CMap naming conventions. default: \code{FALSE}.}
 
@@ -28,9 +28,20 @@ annotate(batch_id, plate_id, cell_id = NULL, external_metadata = NULL,
 \description{
 \code{annotate} adds plate and well metadata, as well as optional external
 metadata. It assumes the following files exist:
-- \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the plate
-barcodes to the corresponding platemaps,
-- For each platemap, a file
+\itemize{
+  \item \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the
+  plate barcodes to the corresponding platemaps,
+  \item For each platemap, a file
 \code{<workspace_dir>/metadata/platemap/<plate_map_name>.txt} which
 contains the metadata for each well position
+}
+Additional metadata can be appended to the output file via the optional
+\code{external_metadata} parameter. \code{external_metadata} is a CSV
+file. The following columns are required:
+\itemize{
+  \item \code{Metadata_Plate}
+  \item \code{Metadata_Well}
+}
+The \code{Metadata_} prefix can be dropped from required columns if the
+remaining metadata columns aren't also prefixed by \code{Metadata_}.
 }

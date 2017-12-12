@@ -2,17 +2,20 @@
 #'
 #' \code{annotate} adds plate and well metadata, as well as optional external
 #' metadata. It assumes the following files exist:
-#' - \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the plate
-#' barcodes to the corresponding platemaps,
-#' - For each platemap, a file
+#' \itemize{
+#'   \item \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the
+#'   plate barcodes to the corresponding platemaps,
+#'   \item For each platemap, a file
 #' \code{<workspace_dir>/metadata/platemap/<plate_map_name>.txt} which
 #' contains the metadata for each well position
-#'
+#' }
 #' Additional metadata can be appended to the output file via the optional
 #' \code{external_metadata} parameter. \code{external_metadata} is a CSV
 #' file. The following columns are required:
-#' - \code{Metadata_Plate}
-#' - \code{Metadata_Well}
+#' \itemize{
+#'   \item \code{Metadata_Plate}
+#'   \item \code{Metadata_Well}
+#' }
 #' The \code{Metadata_} prefix can be dropped from required columns if the
 #' remaining metadata columns aren't also prefixed by \code{Metadata_}.
 #'
