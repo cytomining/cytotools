@@ -52,7 +52,7 @@ test_that("`annotate` with external_metadata appends metadata", {
 
   external_metadata_csv <- tempfile("external_m")
 
-  external_metadata <- tibble(
+  external_metadata <- dplyr::tibble(
     "Metadata_Plate" = c("SQ00015116", "SQ00015116"),
     "Metadata_Well" = c("A01", "B01"),
     "Metadata_pert_id" = c("BRD-K18895904", "BRD-K18895904"),
@@ -86,7 +86,7 @@ test_that("`annotate` with external_metadata adds metadata prefix", {
 
   external_metadata_csv <- tempfile("external_m")
 
-  external_metadata <- tibble(
+  external_metadata <- dplyr::tibble(
     "Plate" = c("SQ00015116", "SQ00015116"),
     "Well" = c("A01", "B01"),
     "pert_id" = c("BRD-K18895904", "BRD-K18895904"),
