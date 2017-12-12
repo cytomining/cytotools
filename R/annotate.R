@@ -8,10 +8,19 @@
 #' \code{<workspace_dir>/metadata/platemap/<plate_map_name>.txt} which
 #' contains the metadata for each well position
 #'
+#' Additional metadata can be appended to the output file via the optional
+#' \code{external_metadata} parameter. \code{external_metadata} is a CSV
+#' file. The following columns are required:
+#' - \code{Metadata_Plate}
+#' - \code{Metadata_Well}
+#' The \code{Metadata_} prefix can be dropped from required columns if the
+#' remaining metadata columns aren't also prefixed by \code{Metadata_}.
+#'
+#'
 #' @param batch_id            Batch ID.
 #' @param plate_id            Plate ID.
 #' @param cell_id             Optional cell ID. default: \code{NULL}.
-#' @param external_metadata   Optional external metadata to join with, as a JSON file. default: \code{NULL}.
+#' @param external_metadata   Optional external metadata to join with, as a CSV file. default: \code{NULL}.
 #' @param format_broad_cmap   Add columns for compatibility with Broad CMap naming conventions. default: \code{FALSE}.
 #' @param output              Output file (.CSV) for annotated data. If \code{NULL}, writes to \code{workspace_dir/backend/batch_id/plate_id/plate_id_augmented.csv}. default: \code{NULL}.
 #' @param perturbation_mode   Perturbation mode. Must be one of \code{"chemical"} or \code{"genetic"}. default: \code{"chemical"}.
@@ -166,6 +175,10 @@ annotate <- function(batch_id, plate_id,
                    stringr::str_replace_all("^", "Metadata_"))
 
     }
+
+    stopifnot(all(
+      c("Metadata_Plate", "Metadata_Well") %in% colnames(external_metadata_df)
+    ))
 
     profiles %<>%
       dplyr::left_join(

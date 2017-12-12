@@ -13,9 +13,9 @@ Options:
   -p <id> --plate_id=<id>                 Plate ID.
   -c <str> --cell_id=<str>                Cell ID [default: unknown]
   -d --format_broad_cmap                  Add columns to make compatible with Broad CMap naming conventions.
-  -j <file> --external_metadata=<file>    External metadata to join with.
+  -j <file> --external_metadata=<file>    Optional external metadata to join with, as a CSV file.
   -m <str> --perturbation_mode=<str>      Mode of perturbation - chemical or genetic [default: chemical]
-  -o <file> --output=<file>                Output file for storing annotated profiles [default: workspace_directory/backend/batch_id/plate_id/plate_id_augmented.csv]
+  -o <file> --output=<file>               Output file for storing annotated profiles [default: workspace_directory/backend/batch_id/plate_id/plate_id_augmented.csv]
   -w <file> --workspace_directory         Root directory containing backend and metadata subdirectories [default: .]' -> doc
 
 opts <- docopt::docopt(doc)

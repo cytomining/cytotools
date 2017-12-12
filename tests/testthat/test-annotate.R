@@ -46,3 +46,72 @@ test_that("`annotate` with format_broad_cmap adds metadata columns", {
 
   file.remove(annotated_csv)
 })
+
+test_that("`annotate` with external_metadata appends metadata", {
+  annotated_csv <- tempfile("SQ00015116_augmented.csv")
+
+  external_metadata_csv <- tempfile("external_m")
+
+  external_metadata <- tibble(
+    "Metadata_Plate" = c("SQ00015116", "SQ00015116"),
+    "Metadata_Well" = c("A01", "B01"),
+    "Metadata_pert_id" = c("BRD-K18895904", "BRD-K18895904"),
+    "Metadata_pert_site" = c(5, 23),
+    "Metadata_pert_mg_per_ml" = c(3.12432, 1.04143999999919)
+  )
+
+  readr::write_csv(external_metadata, external_metadata_csv)
+
+  annotate("batch0", "SQ00015116",
+           external_metadata = external_metadata_csv,
+           output = annotated_csv,
+           workspace_dir = system.file("extdata", package = "cytotools"))
+
+  result <- readr::read_csv(annotated_csv)
+
+  expect_equal(
+    result[colnames(external_metadata)] %>% as.data.frame(),
+    external_metadata %>% as.data.frame(),
+    tolerance = 10e-7,
+    check.attributes = FALSE
+  )
+
+  file.remove(annotated_csv)
+
+  file.remove(external_metadata_csv)
+})
+
+test_that("`annotate` with external_metadata adds metadata prefix", {
+  annotated_csv <- tempfile("SQ00015116_augmented.csv")
+
+  external_metadata_csv <- tempfile("external_m")
+
+  external_metadata <- tibble(
+    "Plate" = c("SQ00015116", "SQ00015116"),
+    "Well" = c("A01", "B01"),
+    "pert_id" = c("BRD-K18895904", "BRD-K18895904"),
+    "pert_site" = c(5, 23),
+    "pert_mg_per_ml" = c(3.12432, 1.04143999999919)
+  )
+
+  readr::write_csv(external_metadata, external_metadata_csv)
+
+  annotate("batch0", "SQ00015116",
+           external_metadata = external_metadata_csv,
+           output = annotated_csv,
+           workspace_dir = system.file("extdata", package = "cytotools"))
+
+  result <- readr::read_csv(annotated_csv)
+
+  external_metadata_colnames <- c(
+    "Metadata_pert_id",
+    "Metadata_pert_site",
+    "Metadata_pert_mg_per_ml"
+  )
+
+  expect_true(all(external_metadata_colnames %in% colnames(result)))
+
+  file.remove(annotated_csv)
+
+  file.remove(external_metadata_csv)
+})
