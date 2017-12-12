@@ -19,7 +19,7 @@ test_that("`annotate` adds plate and well metadata", {
   file.remove(annotated_csv)
 })
 
-test_that("`annotate` with format_broad_cmap", {
+test_that("`annotate` with format_broad_cmap adds metadata columns", {
   annotated_csv <- tempfile("SQ00015116_augmented.csv")
 
   annotate("batch0", "SQ00015116",
