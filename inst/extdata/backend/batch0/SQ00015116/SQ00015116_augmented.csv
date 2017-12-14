@@ -1,0 +1,3 @@
+Metadata_Plate,Metadata_Well,Metadata_Assay_Plate_Barcode,Metadata_Plate_Map_Name,Metadata_well_position,Metadata_broad_sample,Metadata_mg_per_ml,Metadata_mmoles_per_liter,Metadata_solvent,Cells_AreaShape_Area_median,Cells_Intensity_IntegratedIntensity_DNA_median,Cytoplasm_AreaShape_Area_median,Cytoplasm_Intensity_IntegratedIntensity_DNA_median,Nuclei_AreaShape_Area_median,Nuclei_Intensity_IntegratedIntensity_DNA_median
+SQ00015116,A01,SQ00015116,C-7161-01-LM6-006,A01,BRD-K18895904-001-16-1,3.12432,10,DMSO,9390,239.51205701963045,6676,65.85157348471694,2788,144.42845508642495
+SQ00015116,B01,SQ00015116,C-7161-01-LM6-006,B01,BRD-K18895904-001-16-1,1.041439999999199,3.3333333333307693,DMSO,14189.5,263.16674127522856,10475,99.87031544093043,2542,170.05213976930827
