@@ -5,24 +5,27 @@
 \title{Normalize profiles based on given control subset}
 \usage{
 normalize(batch_id, plate_id, subset, backend_directory = file.path("..",
-  "..", "backend"), tmpdir = "/tmp", operation = "robustize",
-  sample_single_cell = FALSE)
+  "..", "backend"), compartments = c("cells", "cytoplasm", "nuclei"),
+  operation = "robustize", sample_single_cell = FALSE,
+  strata = c("Metadata_Plate"))
 }
 \arguments{
-\item{batch_id}{batch ID given as directory name}
+\item{batch_id}{batch ID given as directory name.}
 
-\item{plate_id}{plate ID given as the directory}
+\item{plate_id}{plate ID given as the directory.}
 
-\item{subset}{Query to define the control poulation used for normalization \code{("Metadata_line_num == 5")}}
+\item{subset}{query to define the control poulation used for normalization \code{("Metadata_line_num == 5")}.}
 
-\item{backend_directory}{Top level directory of the experiment, default: \code{"../../backend/"},}
+\item{backend_directory}{top-level directory of the experiment, default: \code{"../../backend/"}.}
 
-\item{tmpdir}{Temporary directory, default \code{"/tmp"}.}
+\item{compartments}{optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.}
 
-\item{operation}{Method used for normalization, default: \code{"robustize"}. See cytominer::normalize}
+\item{operation}{method used for normalization, default: \code{"robustize"}. See cytominer::normalize.}
 
-\item{sample_single_cell}{Use single cell data for sampling, instead of per-well profiles, default \code{FALSE}.}
+\item{sample_single_cell}{use single cell data for sampling, instead of per-well profiles, default \code{FALSE}.}
+
+\item{strata}{character vector specifying grouping variables for normalization. default \code{c("Metadata_Plate")}.}
 }
 \description{
-Normalize profiles based on given control subset
+\code{normalize} normalizes data based on the specified normn method.
 }
