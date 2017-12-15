@@ -53,11 +53,15 @@ test_that("`annotate` with external_metadata appends metadata", {
   external_metadata_csv <- tempfile("external_m")
 
   external_metadata <- dplyr::tibble(
-    "Metadata_Plate" = c("SQ00015116", "SQ00015116"),
-    "Metadata_Well" = c("A01", "B01"),
-    "Metadata_pert_id" = c("BRD-K18895904", "BRD-K18895904"),
-    "Metadata_pert_site" = c(5, 23),
-    "Metadata_pert_mg_per_ml" = c(3.12432, 1.04143999999919)
+    "Metadata_Plate" = rep(c("SQ00015116"), 30),
+    "Metadata_Well" = c("A01", "A02", "A03", "A04", "A05", "A06",
+                        "B01", "B02", "B03", "B04", "B05", "B06",
+                        "C01", "C02", "C03", "C04", "C05", "C06",
+                        "D01", "D02", "D03", "D04", "D05", "D06",
+                        "E01", "E02", "E03", "E04", "E05", "E06"),
+    "Metadata_pert_id" = rep(c("BRD-K18895904"), 30),
+    "Metadata_pert_site" = seq(1, 30),
+    "Metadata_pert_mg_per_ml" = rnorm(30)
   )
 
   readr::write_csv(external_metadata, external_metadata_csv)
@@ -86,12 +90,17 @@ test_that("`annotate` with external_metadata adds metadata prefix", {
 
   external_metadata_csv <- tempfile("external_m")
 
+
   external_metadata <- dplyr::tibble(
-    "Plate" = c("SQ00015116", "SQ00015116"),
-    "Well" = c("A01", "B01"),
-    "pert_id" = c("BRD-K18895904", "BRD-K18895904"),
-    "pert_site" = c(5, 23),
-    "pert_mg_per_ml" = c(3.12432, 1.04143999999919)
+    "Plate" = rep(c("SQ00015116"), 30),
+    "Well" = c("A01", "A02", "A03", "A04", "A05", "A06",
+                        "B01", "B02", "B03", "B04", "B05", "B06",
+                        "C01", "C02", "C03", "C04", "C05", "C06",
+                        "D01", "D02", "D03", "D04", "D05", "D06",
+                        "E01", "E02", "E03", "E04", "E05", "E06"),
+    "pert_id" = rep(c("BRD-K18895904"), 30),
+    "pert_site" = seq(1, 30),
+    "pert_mg_per_ml" = rnorm(30)
   )
 
   readr::write_csv(external_metadata, external_metadata_csv)
