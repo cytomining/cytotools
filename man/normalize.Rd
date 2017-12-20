@@ -6,8 +6,7 @@
 \usage{
 normalize(batch_id, plate_id, subset, backend_directory = file.path("..",
   "..", "backend"), compartments = c("cells", "cytoplasm", "nuclei"),
-  operation = "robustize", sample_single_cell = FALSE,
-  strata = c("Metadata_Plate"))
+  operation = "robustize", strata = c("Metadata_Plate"))
 }
 \arguments{
 \item{batch_id}{batch ID given as directory name.}
@@ -21,8 +20,6 @@ normalize(batch_id, plate_id, subset, backend_directory = file.path("..",
 \item{compartments}{optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.}
 
 \item{operation}{method used for normalization, default: \code{"robustize"}. See cytominer::normalize.}
-
-\item{sample_single_cell}{use single cell data for sampling, instead of per-well profiles, default \code{FALSE}.}
 
 \item{strata}{character vector specifying grouping variables for normalization. default \code{c("Metadata_Plate")}.}
 }

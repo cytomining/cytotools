@@ -8,7 +8,6 @@
 #' @param backend_directory    top-level directory of the experiment, default: \code{"../../backend/"}.
 #' @param compartments         optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.
 #' @param operation            method used for normalization, default: \code{"robustize"}. See cytominer::normalize.
-#' @param sample_single_cell   use single cell data for sampling, instead of per-well profiles, default \code{FALSE}.
 #' @param strata               character vector specifying grouping variables for normalization. default \code{c("Metadata_Plate")}.
 #'
 #' @importFrom magrittr %>%
@@ -20,7 +19,6 @@ normalize <- function(batch_id,
                       backend_directory = file.path("..", "..", "backend"),
                       compartments = c("cells", "cytoplasm", "nuclei"),
                       operation = "robustize",
-                      sample_single_cell = FALSE,
                       strata = c("Metadata_Plate")
                       ) {
 
@@ -47,35 +45,34 @@ normalize <- function(batch_id,
   # prepare to load objects by loading image table so we only have to load the
   # data once.
 
-  if (sample_single_cell) {
-    sqlite_file <- paste(full_backend_directory,
-                         paste0(plate_id, ".sqlite"), sep = "/")
+    # if (sample_single_cell) {
+    #s qlite_file <- paste(full_backend_directory,
+    #                     paste0(plate_id, ".sqlite"), sep = "/")
 
     # TODO: if file doesn't exist at path then copy it from S3 to a tmpdir
-    if (!file.exists(sqlite_file)) {
-      stop(paste0(sqlite_file, " does not exist"))
-    }
+    #if (!file.exists(sqlite_file)) {
+    #  stop(paste0(sqlite_file, " does not exist"))
+    # }
 
-    db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
-
-    #https://github.com/tidyverse/dplyr/issues/3093
-    RSQLite::initExtension(db)
-
-    # get metadata and copy to db
-    metadata <-
-      profiles %>%
-      dplyr::select(dplyr::matches("Metadata_")) %>%
-      dplyr::distinct()
-
-    metadata <- dplyr::copy_to(db, metadata)
-
-    # TODO: change the renames to use tidyeval form
-    image <- dplyr::tbl(src = db, "image") %>%
-      dplyr::select(c(image_object_join_columns, well_unique_id_columns_db)) %>%
-      dplyr::rename(Metadata_Plate = Image_Metadata_Plate) %>%
-      dplyr::rename(Metadata_Well = Image_Metadata_Well) %>%
-      dplyr::inner_join(metadata, by = well_unique_id_columns)
-  }
+    # db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
+    #
+    # #https://github.com/tidyverse/dplyr/issues/3093
+    # RSQLite::initExtension(db)
+    #
+    # # get metadata and copy to db
+    # metadata <-
+    #   profiles %>%
+    #   dplyr::select(dplyr::matches("Metadata_")) %>%
+    #   dplyr::distinct()
+    #   metadata <- dplyr::copy_to(db, metadata)
+    #
+    # # TODO: change the renames to use tidyeval form
+    # image <- dplyr::tbl(src = db, "image") %>%
+    #   dplyr::select(c(image_object_join_columns, well_unique_id_columns_db)) %>%
+    #   dplyr::rename(Metadata_Plate = Image_Metadata_Plate) %>%
+    #   dplyr::rename(Metadata_Well = Image_Metadata_Well) %>%
+    #   dplyr::inner_join(metadata, by = well_unique_id_columns)
+    # }
 
   load_objects <- function(compartment) {
     dplyr::tbl(src = db, compartment) %>%
@@ -89,22 +86,19 @@ normalize <- function(batch_id,
     profiles %>%
       dplyr::select(dplyr::matches(
         stringr::str_c("Metadata_", "|", compartment_tag(compartment))))
-
   }
 
   normalize_profiles <- function(compartment) {
     if (sample_single_cell) {
       sample <- load_objects(compartment = compartment)
-
     } else {
       sample <- load_profiles(compartment = compartment)
-
     }
 
     # variables are columns with a prefix as one of the compartments
     # e.g. Nuclei_
     variables <- colnames(sample) %>%
-      stringr::str_subset(compartment_tag(compartment))
+        stringr::str_subset(compartment_tag(compartment))
 
     # get the sample on which to compute the normalization parameters
     sample %<>%
@@ -121,7 +115,6 @@ normalize <- function(batch_id,
         sample = sample,
         operation = operation
       )
-
   }
 
   metadata <-
@@ -141,5 +134,4 @@ normalize <- function(batch_id,
     DBI::dbDisconnect(db)
 
   }
-
 }

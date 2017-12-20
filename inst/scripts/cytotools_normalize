@@ -6,7 +6,7 @@ extends <- methods::extends
 'normalize
 
 Usage:
-cytotools_normalize -b <batch_id> -p <plate_id> -s <query> [-c <compartments>] [-d <backend_directory>] [-l ] [-m <operation>] [-r <strata>]
+cytotools_normalize -b <batch_id> -p <plate_id> -s <query> [-c <compartments>] [-d <backend_directory>] [-m <operation>] [-r <strata>]
 
 Options:
   -h --help                                         Show this screen.
@@ -15,7 +15,6 @@ Options:
   -s <query> --subset=<query>                       Query to specify the sample for estimating normalization parameters.
   -c <compartments> --compartments=<compartments>   Comma-separated list of cellular compartments. [default: cells,cytoplasm,nuclei].
   -d --backend_dir=<backend_directory>              Top level directory of the experiment. [default: "../../backend/" ]
-  -l --sample_single_cell                           Use single cell data for sampling, instead of per-well profiles. [default: FALSE]
   -m <operation> --operation=<operation>            Method for normalization [default: robustize].
   -r <strata> --strata=<strata>                     Comma-separated list of grouping variables for normalization. [default: Metadata_Plate]' -> doc
 
@@ -31,5 +30,4 @@ cytotools::normalize(batch_id = opts[["batch_id"]],
                      backend_directory = opts[["backend_directory"]],
                      compartments = stringr::str_split(opts[["compartments"]], ",")[[1]],
                      operation = opts[["operation"]],
-                     sample_single_cell = opts[["sample_single_cell"]],
                      strata = stringr::str_split(opts[["strata"]], ",")[[1]])
