@@ -94,10 +94,10 @@ test_that("`annotate` with external_metadata adds metadata prefix", {
   external_metadata <- dplyr::tibble(
     "Plate" = rep(c("SQ00015116"), 30),
     "Well" = c("A01", "A02", "A03", "A04", "A05", "A06",
-                        "B01", "B02", "B03", "B04", "B05", "B06",
-                        "C01", "C02", "C03", "C04", "C05", "C06",
-                        "D01", "D02", "D03", "D04", "D05", "D06",
-                        "E01", "E02", "E03", "E04", "E05", "E06"),
+               "B01", "B02", "B03", "B04", "B05", "B06",
+               "C01", "C02", "C03", "C04", "C05", "C06",
+               "D01", "D02", "D03", "D04", "D05", "D06",
+               "E01", "E02", "E03", "E04", "E05", "E06"),
     "pert_id" = rep(c("BRD-K18895904"), 30),
     "pert_site" = seq(1, 30),
     "pert_mg_per_ml" = rnorm(30)
