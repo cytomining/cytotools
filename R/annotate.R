@@ -179,10 +179,6 @@ annotate <- function(batch_id, plate_id,
 
     }
 
-    stopifnot(all(
-      c("Metadata_Plate", "Metadata_Well") %in% colnames(external_metadata_df)
-    ))
-
     profiles %<>%
       dplyr::left_join(
         external_metadata_df %>%
