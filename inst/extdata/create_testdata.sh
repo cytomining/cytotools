@@ -18,6 +18,7 @@ for plate in ../../backend/batch0/*/; do
     -o ../../backend/batch0/${plate}/${plate}.csv
 
   ./annotate.R  \
+    -d \
     -b batch0   \
     -p ${plate}
 
