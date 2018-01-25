@@ -6,7 +6,7 @@
 #' @param output_file       Output file for storing aggregated profiles.
 #' @param compartments      optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.
 #' @param operation         optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"mean"}.
-#' @param strata            character vector specifying grouping variables for aggregation. default \code{c("Image_Metadata_Plate", "Image_Metadata_Well")}.
+#' @param strata            character vector specifying grouping variables for aggregation. default \code{c("Metadata_Plate", "Metadata_Well")}.
 #' @param variables         optional character vector specifying observation variables. default \code{"all"}.
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
@@ -15,7 +15,7 @@ aggregate <- function(sqlite_file,
                       output_file,
                       compartments = c("cells", "cytoplasm", "nuclei"),
                       operation = "mean",
-                      strata = c("Image_Metadata_Plate", "Image_Metadata_Well"),
+                      strata = c("Metadata_Plate", "Metadata_Well"),
                       variables = "all") {
 
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
@@ -28,8 +28,6 @@ aggregate <- function(sqlite_file,
 
   image <- dplyr::tbl(src = db, "image") %>%
     dplyr::select(c(image_object_join_columns, strata))
-
-  append_operation_tag <- function(s) stringr::str_c(s, operation, sep = "_")
 
   aggregate_objects <- function(compartment) {
     object <- dplyr::tbl(src = db, compartment)

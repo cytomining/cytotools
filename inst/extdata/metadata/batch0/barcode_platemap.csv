@@ -1,2 +1,3 @@
-Assay_Plate_Barcode,Plate_Map_Name
-SQ00015116,C-7161-01-LM6-006
+Assay_Plate_Barcode,Plate_Map_Name,Batch_Number,Batch_Date
+SQ00015116,C-7161-01-LM6-001,2,2016-04-05
+SQ00015117,C-7161-01-LM6-001,2,2016-04-05
