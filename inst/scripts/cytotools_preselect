@@ -1,0 +1,25 @@
+#!/usr/bin/env Rscript
+
+'preselect
+
+Usage:
+  preselect.R -b <id> -i <file> -r <list> [-n <n>] [-s <query>]
+
+options:
+  -h --help                        Show this screen.
+  -b <id> --batch_id=<id>          Batch ID.
+  -i <file> --input=<file>         Test data on which to perform variable selection operations.
+  -r <list> --operations=<list>    Comma-separated list of operations.
+  -n <n> --replicates=<n>          Number of replicates selected per plate map.
+  -s <query> --subset=<query>      Query to create the training data by subsetting.
+  -o <file> --output_directory     Directory to save output files to [default: workspace_directory/parameters/batch_id/variable_selection/].
+  -w <file> --workspace_directory  Root directory containing backend and metadata subdirectories [default: .]' -> doc
+
+doParallel::registerDoParallel(cores=detectCores())
+
+opts <- docopt(doc)
+
+cytotools::preselect(opts[["batch_id"]], opts[["input"]], stringr::str_split(opts[["operations"]], ",")[[1]],
+                     replicates = opts[["replicates"]],
+                     subset = opts[["subset"]],
+                     workspace_dir = opts[["workspace_directory"]])
