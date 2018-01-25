@@ -1,22 +1,25 @@
 context("aggregate")
 
 test_that("`aggregate` aggregates data per well", {
-
   futile.logger::flog.threshold(futile.logger::WARN)
 
   aggregated_csv <- tempfile("SQ00015116.csv")
 
   sqlite_file <-
-    system.file("extdata", "backend", "batch0", "SQ00015116",
-                "SQ00015116.sqlite",
-                package = "cytotools")
+    system.file(
+      "extdata", "backend", "batch0", "SQ00015116",
+      "SQ00015116.sqlite",
+      package = "cytotools"
+    )
 
   aggregate(sqlite_file, aggregated_csv, operation = "mean")
 
   expected_csv <-
-    system.file("extdata", "backend", "batch0", "SQ00015116",
+    system.file(
+      "extdata", "backend", "batch0", "SQ00015116",
       "SQ00015116.csv",
-      package = "cytotools")
+      package = "cytotools"
+    )
 
   expected <- readr::read_csv(expected_csv)
 
@@ -29,34 +32,42 @@ test_that("`aggregate` aggregates data per well", {
 
 test_that(
   "`aggregate` aggregates data per well only in specified compartments", {
+    futile.logger::flog.threshold(futile.logger::WARN)
 
-  futile.logger::flog.threshold(futile.logger::WARN)
+    aggregated_csv <- tempfile("SQ00015116.csv")
 
-  aggregated_csv <- tempfile("SQ00015116.csv")
+    sqlite_file <-
+      system.file(
+        "extdata", "backend", "batch0", "SQ00015116",
+        "SQ00015116.sqlite",
+        package = "cytotools"
+      )
 
-  sqlite_file <-
-    system.file("extdata", "backend", "batch0", "SQ00015116",
-                "SQ00015116.sqlite",
-                package = "cytotools")
+    aggregate(
+      sqlite_file, aggregated_csv,
+      operation = "mean",
+      compartments = c("cells")
+    )
 
-  aggregate(sqlite_file, aggregated_csv,
-            operation = "mean",
-            compartments = c("cells"))
+    expected_csv <-
+      system.file(
+        "extdata", "backend", "batch0", "SQ00015116",
+        "SQ00015116.csv",
+        package = "cytotools"
+      )
 
-  expected_csv <-
-    system.file("extdata", "backend", "batch0", "SQ00015116",
-                "SQ00015116.csv",
-                package = "cytotools")
+    expected <- readr::read_csv(expected_csv) %>%
+      dplyr::select(
+        "Metadata_Plate",
+        "Metadata_Well",
+        "Cells_AreaShape_Area",
+        "Cells_Intensity_IntegratedIntensity_DNA"
+      )
 
-  expected <- readr::read_csv(expected_csv) %>%
-    dplyr::select("Metadata_Plate",
-                  "Metadata_Well",
-                  "Cells_AreaShape_Area",
-                  "Cells_Intensity_IntegratedIntensity_DNA")
+    actual <- readr::read_csv(aggregated_csv)
 
-  actual <- readr::read_csv(aggregated_csv)
+    expect_equal(actual, expected)
 
-  expect_equal(actual, expected)
-
-  file.remove(aggregated_csv)
-})
+    file.remove(aggregated_csv)
+  }
+)

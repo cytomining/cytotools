@@ -17,10 +17,9 @@ aggregate <- function(sqlite_file,
                       operation = "mean",
                       strata = c("Metadata_Plate", "Metadata_Well"),
                       variables = "all") {
-
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
 
-  #https://github.com/tidyverse/dplyr/issues/3093
+  # https://github.com/tidyverse/dplyr/issues/3093
   RSQLite::initExtension(db)
 
   # columns by which to join image table and objec tables
@@ -44,7 +43,7 @@ aggregate <- function(sqlite_file,
         intersect(
           paste(stringr::str_to_title(compartment), variables, sep = "_"),
           variables_
-          )
+        )
     }
 
     futile.logger::flog.info(paste0("Started aggregating ", compartment))

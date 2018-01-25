@@ -41,25 +41,29 @@ annotate <- function(batch_id, plate_id,
                      output = NULL,
                      perturbation_mode = "chemical",
                      workspace_dir = ".") {
-
   metadata_dir <- file.path(workspace_dir, "metadata", batch_id)
 
   backend_dir <- file.path(workspace_dir, "backend", batch_id, plate_id)
 
   # read profiles and rename column names
   profiles <- suppressMessages(readr::read_csv(
-    file.path(backend_dir, paste0(plate_id, ".csv"))))
+    file.path(backend_dir, paste0(plate_id, ".csv"))
+  ))
 
   profiles %<>%
     setNames(names(profiles) %>%
-               stringr::str_replace_all("^Image_Metadata", "Metadata"))
+      stringr::str_replace_all("^Image_Metadata", "Metadata"))
 
   # read and join metadata map
   metadata_map <- suppressMessages(
     readr::read_csv(
       file.path(metadata_dir, "barcode_platemap.csv"),
-      col_types = readr::cols(Assay_Plate_Barcode = readr::col_character(),
-                              Plate_Map_Name = readr::col_character())))
+      col_types = readr::cols(
+        Assay_Plate_Barcode = readr::col_character(),
+        Plate_Map_Name = readr::col_character()
+      )
+    )
+  )
 
   stopifnot("Assay_Plate_Barcode" %in% colnames(metadata_map))
 
@@ -67,8 +71,10 @@ annotate <- function(batch_id, plate_id,
     setNames(names(metadata_map) %>% stringr::str_replace_all("^", "Metadata_"))
 
   profiles %<>%
-    dplyr::mutate(Metadata_Assay_Plate_Barcode =
-                    as.character(.data$Metadata_Plate))
+    dplyr::mutate(
+      Metadata_Assay_Plate_Barcode =
+        as.character(.data$Metadata_Plate)
+    )
 
   profiles %<>%
     dplyr::inner_join(metadata_map, by = c("Metadata_Assay_Plate_Barcode"))
@@ -84,14 +90,14 @@ annotate <- function(batch_id, plate_id,
   platemap <-
     suppressMessages(
       readr::read_tsv(
-        file.path(metadata_dir, "platemap", paste0(plate_map_name, ".txt")))
+        file.path(metadata_dir, "platemap", paste0(plate_map_name, ".txt"))
       )
+    )
 
   stopifnot("well_position" %in% colnames(platemap))
 
   if ("plate_map_name" %in% colnames(platemap)) {
     platemap %<>% dplyr::select(-plate_map_name)
-
   }
 
   platemap %<>%
@@ -107,18 +113,19 @@ annotate <- function(batch_id, plate_id,
   if (format_broad_cmap) {
     profiles %<>%
       dplyr::mutate(
-        Metadata_pert_id = stringr::str_extract(.data$Metadata_broad_sample,
-                                                "(BRD[-N][A-Z0-9]+)"),
+        Metadata_pert_id = stringr::str_extract(
+          .data$Metadata_broad_sample,
+          "(BRD[-N][A-Z0-9]+)"
+        ),
         Metadata_pert_mfc_id = .data$Metadata_broad_sample,
         Metadata_pert_well = .data$Metadata_Well,
-        Metadata_pert_id_vendor = "")
+        Metadata_pert_id_vendor = ""
+      )
 
     if ("Metadata_cell_id" %in% names(profiles)) {
       message("`cell_id` column present in metadata, will not override.")
-
     } else {
       profiles %<>% dplyr::mutate(Metadata_cell_id = cell_id)
-
     }
 
     if (perturbation_mode == "chemical") {
@@ -126,44 +133,55 @@ annotate <- function(batch_id, plate_id,
         dplyr::mutate(
           Metadata_broad_sample_type =
             ifelse(is.na(.data$Metadata_broad_sample) |
-                     .data$Metadata_broad_sample == "DMSO",
-                   "control",
-                   "trt"),
+              .data$Metadata_broad_sample == "DMSO",
+            "control",
+            "trt"
+            ),
           Metadata_broad_sample =
             ifelse(.data$Metadata_broad_sample_type == "control",
-                   "DMSO",
-                   .data$Metadata_broad_sample),
+              "DMSO",
+              .data$Metadata_broad_sample
+            ),
           Metadata_mmoles_per_liter =
             ifelse(.data$Metadata_broad_sample_type == "control",
-                   0,
-                   .data$Metadata_mmoles_per_liter),
-          Metadata_pert_vehicle = .data$Metadata_solvent) %>%
-        dplyr::mutate(Metadata_broad_sample_type =
-                        ifelse(.data$Metadata_broad_sample == "empty",
-                               "empty",
-                               .data$Metadata_broad_sample_type))
+              0,
+              .data$Metadata_mmoles_per_liter
+            ),
+          Metadata_pert_vehicle = .data$Metadata_solvent
+        ) %>%
+        dplyr::mutate(
+          Metadata_broad_sample_type =
+            ifelse(.data$Metadata_broad_sample == "empty",
+              "empty",
+              .data$Metadata_broad_sample_type
+            )
+        )
 
       if ("Metadata_mg_per_ml" %in% names(profiles)) {
         profiles %<>%
-          dplyr::mutate(Metadata_mg_per_ml =
-                          ifelse(.data$Metadata_broad_sample_type == "control",
-                                 0,
-                                 .data$Metadata_mg_per_ml))
-
+          dplyr::mutate(
+            Metadata_mg_per_ml =
+              ifelse(.data$Metadata_broad_sample_type == "control",
+                0,
+                .data$Metadata_mg_per_ml
+              )
+          )
       }
     }
 
     if (perturbation_mode == "genetic") {
       profiles %<>%
-        dplyr::mutate(Metadata_broad_sample_type =
-                        ifelse(.data$Metadata_pert_name == "EMPTY",
-                               "control",
-                               "trt"))
+        dplyr::mutate(
+          Metadata_broad_sample_type =
+            ifelse(.data$Metadata_pert_name == "EMPTY",
+              "control",
+              "trt"
+            )
+        )
     }
 
     profiles %<>%
       dplyr::mutate(Metadata_pert_type = .data$Metadata_broad_sample_type)
-
   }
 
   # external_metadata
@@ -175,8 +193,7 @@ annotate <- function(batch_id, plate_id,
     if (length(grep("Metadata_", colnames(external_metadata_df))) == 0) {
       external_metadata_df %<>%
         setNames(names(external_metadata_df) %>%
-                   stringr::str_replace_all("^", "Metadata_"))
-
+          stringr::str_replace_all("^", "Metadata_"))
     }
 
     profiles %<>%
@@ -191,24 +208,26 @@ annotate <- function(batch_id, plate_id,
   if (format_broad_cmap) {
     if ("Metadata_pert_iname" %in% colnames(profiles)) {
       profiles %<>%
-        dplyr::mutate(Metadata_pert_mfc_desc = .data$Metadata_pert_iname,
-               Metadata_pert_name = .data$Metadata_pert_iname)
+        dplyr::mutate(
+          Metadata_pert_mfc_desc = .data$Metadata_pert_iname,
+          Metadata_pert_name = .data$Metadata_pert_iname
+        )
     }
   }
 
   # save
   if (is.null(output)) {
     output <- file.path(backend_dir, paste0(plate_id, "_augmented.csv"))
-
   }
 
   metadata_cols <- stringr::str_subset(names(profiles), "^Metadata_")
 
-  feature_cols <- stringr::str_subset(names(profiles),
-                                      "^Cells_|^Cytoplasm_|^Nuclei_")
+  feature_cols <- stringr::str_subset(
+    names(profiles),
+    "^Cells_|^Cytoplasm_|^Nuclei_"
+  )
 
   all_cols <- c(metadata_cols, feature_cols)
 
   profiles[all_cols] %>% readr::write_csv(output)
-
 }
