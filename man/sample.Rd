@@ -13,10 +13,10 @@ sample(batch_id, pattern, output, replicates = NULL, workspace_dir = ".")
 
 \item{output}{Output file - either CSV or RDS.}
 
-\item{replicates}{Number of replicates to select per plate map.}
+\item{replicates}{Number of replicates to select per plate map. Optional. default: \code{NULL}.}
 
 \item{workspace_dir}{Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.}
 }
 \description{
-\code{annotate} **DESCRIPTION**
+\code{sample} **DESCRIPTION**
 }

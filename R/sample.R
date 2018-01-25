@@ -1,17 +1,18 @@
 #' **DESCRIPTION**
 #'
-#' \code{annotate} **DESCRIPTION**
+#' \code{sample} **DESCRIPTION**
 #'
 #' @param batch_id        Batch ID.
 #' @param pattern         Regular expression - only CSVs.
 #' @param output          Output file - either CSV or RDS.
-#' @param replicates      Number of replicates to select per plate map.
+#' @param replicates      Number of replicates to select per plate map. Optional. default: \code{NULL}.
 #' @param workspace_dir   Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
 #' @importFrom magrittr extract2
 #' @importFrom rlang .data
-#' @importFrom utils head tail
+#' @importFrom utils head
+#' @importFrom utils tail
 #' @export
 sample <- function(batch_id, pattern, output,
                    replicates = NULL,
@@ -28,12 +29,12 @@ sample <- function(batch_id, pattern, output,
   if (!is.null(replicates)) {
     # get the list of plates that retrieved using the pattern
     plate_list_retrieved <-
-      lapply(file_list,
-             function(file) {
-               head(tail(stringr::str_split(file, "/")[[1]], 2), 1)
-             }) %>%
-      unlist() %>%
-      dplyr::data_frame(Assay_Plate_Barcode = .data$.)
+      dplyr::data_frame(
+        Assay_Plate_Barcode = lapply(file_list, function(file) {
+          head(tail(stringr::str_split(file, "/")[[1]], 2), 1)
+        }) %>%
+          unlist()
+        )
 
     replicates <- as.integer(replicates)
 
@@ -47,7 +48,7 @@ sample <- function(batch_id, pattern, output,
       dplyr::select("Assay_Plate_Barcode", "Plate_Map_Name") %>%
       dplyr::inner_join(plate_list_retrieved, by = "Assay_Plate_Barcode") %>%
       dplyr::group_by("Plate_Map_Name") %>%
-      dplyr::arrange("Assay_Plate_Barcode") %>%
+      dplyr::arrange(Assay_Plate_Barcode) %>%
       dplyr::mutate(
         replicate_id = dplyr::dense_rank(.data$Assay_Plate_Barcode)) %>%
       dplyr::filter(replicate_id %in% seq(replicates)) %>%
@@ -78,10 +79,10 @@ sample <- function(batch_id, pattern, output,
 
   if (tools::file_ext(output) == "rds") {
     saveRDS(df, output)
-  } else if (tools::file_ext(output) == "csv"){
+  } else if (tools::file_ext(output) == "csv") {
     readr::write_csv(df, output)
-#   } else if (tools::file_ext(output) == "feather"){
-#     feather::write_feather(df, output)
+  } else if (tools::file_ext(output) == "feather") {
+    feather::write_feather(df, output)
   } else {
     stop(paste0("Unsupported file extension: ", tools::file_ext(output)))
   }
