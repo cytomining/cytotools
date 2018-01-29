@@ -18,9 +18,9 @@ utils::globalVariables(c("Assay_Plate_Barcode", "replicate_id"))
 sample <- function(batch_id, pattern, output,
                    replicates = NULL,
                    workspace_dir = ".") {
-  backend_dir <- paste(workspace_dir, "backend", batch_id, sep = "/")
+  backend_dir <- file.path(workspace_dir, "backend", batch_id)
 
-  metadata_dir <- paste(workspace_dir, "metadata", batch_id, sep = "/")
+  metadata_dir <- file.path(workspace_dir, "metadata", batch_id)
 
   file_list <- list.files(
     backend_dir,
@@ -44,7 +44,7 @@ sample <- function(batch_id, pattern, output,
     plate_list <-
       suppressMessages(
         readr::read_csv(
-          paste(metadata_dir, "barcode_platemap.csv", sep = "/"),
+          file.path(metadata_dir, "barcode_platemap.csv"),
           col_types = readr::cols(
             Assay_Plate_Barcode = readr::col_character(),
             Plate_Map_Name = readr::col_character()
