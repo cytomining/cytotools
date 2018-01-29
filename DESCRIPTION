@@ -2,9 +2,9 @@ Package: cytotools
 Type: Package
 Title: Command-Line Tools to Get Things Done Using Cytominer
 Version: 0.0.0.9000
-Authors@R: c(person("Tim", "Becker", email = "tbecker@broadinstitute.org", role = "aut"),
+Authors@R: c(person("Tim", "Becker", email = "tbecker@broadinstitute.org", role = c("aut", "cre")),
     person("Claire", "McQuin", email = "mcquin@broadinstitute.org", role = "aut"),
-    person("Shantanu", "Singh", email = "shsingh@broadinstitute.org", role = c("aut", "cre"))
+    person("Shantanu", "Singh", email = "shsingh@broadinstitute.org", role = "aut")
   )
 Description: Provides command-line tools for processing morphological profiling
     datasets. Most of the functionality is provided using `cytominer`.
