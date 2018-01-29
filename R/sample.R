@@ -1,11 +1,12 @@
-#' **DESCRIPTION**
+utils::globalVariables(c("Assay_Plate_Barcode", "replicate_id"))
+#' Sample selects replicates across specified plates.
 #'
-#' \code{sample} **DESCRIPTION**
+#' \code{sample} replicates across specified plates, and aggregates the result in a single file.
 #'
 #' @param batch_id        Batch ID.
 #' @param pattern         Regular expression - only CSVs.
 #' @param output          Output file - either CSV or RDS.
-#' @param replicates      Number of replicates to select per plate map. Optional. default: \code{NULL}.
+#' @param replicates      Number of replicates to select per plate map. Selects all replicates if \code{NULL}. default: \code{NULL}.
 #' @param workspace_dir   Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.
 #' @importFrom magrittr %<>%
 #' @importFrom magrittr %>%
@@ -17,7 +18,6 @@
 sample <- function(batch_id, pattern, output,
                    replicates = NULL,
                    workspace_dir = ".") {
-
   backend_dir <- paste(workspace_dir, "backend", batch_id, sep = "/")
 
   metadata_dir <- paste(workspace_dir, "metadata", batch_id, sep = "/")
