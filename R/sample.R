@@ -4,8 +4,8 @@ utils::globalVariables(c("Assay_Plate_Barcode", "replicate_id"))
 #' \code{sample} replicates across specified plates, and aggregates the result in a single file.
 #'
 #' @param batch_id        Batch ID.
-#' @param pattern         Regular expression - only CSVs.
-#' @param output          Output file - either CSV or RDS.
+#' @param pattern         Regular expression specifying the filenames containing the profiles from which to sample. Only CSVs are allowed.
+#' @param output          Output file. The extension should be either csv, rds, or feather.
 #' @param replicates      Number of replicates to select per plate map. Selects all replicates if \code{NULL}. default: \code{NULL}.
 #' @param workspace_dir   Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.
 #' @importFrom magrittr %<>%
