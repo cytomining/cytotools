@@ -9,9 +9,9 @@ sample(batch_id, pattern, output, replicates = NULL, workspace_dir = ".")
 \arguments{
 \item{batch_id}{Batch ID.}
 
-\item{pattern}{Regular expression - only CSVs.}
+\item{pattern}{Regular expression specifying the filenames containing the profiles from which to sample. Only CSVs are allowed.}
 
-\item{output}{Output file - either CSV or RDS.}
+\item{output}{Output file. The extension should be either csv, rds, or feather.}
 
 \item{replicates}{Number of replicates to select per plate map. Selects all replicates if \code{NULL}. default: \code{NULL}.}
 

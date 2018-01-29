@@ -11,9 +11,9 @@ Usage:
 Options:
   -h --help                             Show this screen.
   -b <id> --batch_id=<id>               Batch ID.
-  -f <pattern> --pattern=<pattern>      Regular expression - only csv\'s.
-  -n <n> --replicates=<n>               Number of replicates to select per plate map.
-  -o <file> --output=<file>             Output file - either csv or rds.
+  -f <pattern> --pattern=<pattern>      Regular expression specifying the filenames containing the profiles from which to sample. Only CSVs are allowed.
+  -n <n> --replicates=<n>               Number of replicates to select per plate map. By default, all replicates are selected.
+  -o <file> --output=<file>             Output file. The extension should be either csv, rds, or feather.
   -w <file> --workspace_directory       Root directory containing backend and metadata subdirectories [default: .]' -> doc
 
 opts <- docopt::docopt(doc)
