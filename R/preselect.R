@@ -1,30 +1,36 @@
-#' Preselect...
+utils::globalVariables("median")
+#' Create a list of variables using various variable selection methods
 #'
 #' \code{preselect}
 #'
-#' @param batch_id            Batch ID.
 #' @param input               Test data on which to perform variable selection operations. Must be CSV.
 #' @param operations          List of operations to perform, as strings. Supported operations: \code{"correlation_threshold"}, \code{"variance_threshold"}, \code{"replicate_correlation"}.
 #' @param replicates          Number of replicates to select per plate map. Required for the operation \code{"replicate_correlation"}. default: \code{NULL}.
+#' @param batch_id            Batch ID. Used for generating output_dir. default: \code{NULL}.
 #' @param subset              Query to create the training data by subsetting. Must be CSVs. default: \code{NULL}.
+#' @param cores               Optional integer specifying number of CPU cores used for parallel computing using \code{doParallel}. default: \code{NULL}.
 #' @param output_dir          Output directory for preselected feature names. If \code{NULL}, writes to \code{workspace_dir/parameters/batch_id/variable_selection/}. default: \code{NULL}.
 #' @param workspace_dir       Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
-#' @importFrom stats filter
-#' @importFrom stats median
-#' @importFrom stats na.omit
 #' @export
-preselect <- function(batch_id, input, operations,
+preselect <- function(input, operations,
                       replicates = NULL,
+                      batch_id = NULL,
                       subset = NULL,
+                      cores = NULL,
                       output_dir = NULL,
                       workspace_dir = ".") {
   if (is.null(output_dir)) {
+    stopifnot(!is.null(batch_id))
     output_dir <- file.path(
       workspace_dir, "parameters",
       batch_id, "variable_selection"
     )
+  }
+
+  if ("replicate_correlation" %in% operations && is.null(replicates)) {
+    stop("replicates is required for operation replicate_correlation")
   }
 
   dir.create(output_dir, recursive = TRUE, showWarnings = FALSE)
@@ -62,7 +68,7 @@ preselect <- function(batch_id, input, operations,
     if (!is.null(subset)) {
       futile.logger::flog.info(sprintf("Subsetting using %s", subset))
 
-      sample <- df %>% dplyr::filter_(subset)
+      sample <- df %>% dplyr::filter(eval(parse(text = subset)))
     } else {
       sample <- df
     }
@@ -79,13 +85,6 @@ preselect <- function(batch_id, input, operations,
         ) %>%
         dplyr::collect()
     } else if (operation == "replicate_correlation") {
-      # This is handled differently because there is no direct
-      # way yet to do filtering in cytominer.
-      # TODO: rewrite this after cytominer has an appropriate
-      # filtering function for this.
-      if (is.null(replicates)) {
-        stop("replicates is required for operation replicate_correlation")
-      }
 
       feature_replicate_correlations <-
         df %>%
@@ -93,7 +92,8 @@ preselect <- function(batch_id, input, operations,
           variables = variables,
           strata = c("Metadata_Plate_Map_Name", "Metadata_Well"),
           split_by = "Metadata_Plate_Map_Name",
-          replicates = replicates
+          replicates = replicates,
+          cores = cores
         )
 
       feature_replicate_correlations %>%
@@ -101,8 +101,8 @@ preselect <- function(batch_id, input, operations,
 
       variables <-
         feature_replicate_correlations %>%
-        na.omit() %>%
-        filter(median > 0.6) %>% # intentionally hard-coded to avoid confusion
+        stats::na.omit() %>%
+        dplyr::filter(median > 0.6) %>% # intentionally hard-coded to avoid confusion
         magrittr::extract2("variable")
 
       metadata <-
@@ -110,7 +110,7 @@ preselect <- function(batch_id, input, operations,
         stringr::str_subset("^Metadata_")
 
       df %<>%
-        dplyr::select_(.dots = c(metadata, variables))
+        dplyr::select(c(metadata, variables))
     }
 
     variables <-
@@ -123,7 +123,7 @@ preselect <- function(batch_id, input, operations,
       sprintf("Writing variable selections to %s", variable_selections_file)
     )
 
-    dplyr::data_frame(variable = variables) %>%
+    dplyr::tibble(variable = variables) %>%
       readr::write_csv(variable_selections_file)
   }
 }
