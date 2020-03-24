@@ -57,6 +57,12 @@ mkdir -p ../../parameters/batch0/sample/
   -n 2                      \
   -i ../../parameters/batch0/sample/normalized_sample.csv
 
+./preselect.R               \
+  -b batch0                 \
+  -r replicate_correlation  \
+  -n 2                      \
+  -i ../../parameters/batch0/sample/normalized_sample.csv
+
 for plate in ../../backend/batch0/*/; do
   plate="${plate%/*}"                       # strip trailing slash
   plate="${plate##../../backend/batch0/}"   # strip path and leading slash
