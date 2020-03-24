@@ -1,0 +1,29 @@
+#!/usr/bin/env Rscript
+
+# https://github.com/tidyverse/dplyr/issues/1760
+extends <- methods::extends
+
+'preselect
+
+Usage:
+  preselect.R -i <file> -r <list> [-b <id>] [-n <n>] [-s <query>] [-c <n>]
+
+options:
+  -h --help                        Show this screen.
+  -i <file> --input=<file>         Test data on which to perform variable selection operations.
+  -r <list> --operations=<list>    Comma-separated list of operations.
+  -n <n> --replicates=<n>          Number of replicates selected per plate map.
+  -b <id> --batch_id=<id>          Batch ID.
+  -s <query> --subset=<query>      Query to create the training data by subsetting.
+  -c <n> --cores=<n>               Number of CPU cores used for parallel computing.
+  -o <file> --output_directory     Directory to save output files to [default: workspace_directory/parameters/batch_id/variable_selection/].
+  -w <file> --workspace_directory  Root directory containing backend and metadata subdirectories [default: .]' -> doc
+
+opts <- docopt::docopt(doc)
+
+cytotools::preselect(opts[["input"]], stringr::str_split(opts[["operations"]], ",")[[1]],
+                     replicates = opts[["replicates"]],
+                     batch_id = opts[["batch_id"]],
+                     subset = opts[["subset"]],
+                     cores = opts[["cores"]],
+                     workspace_dir = opts[["workspace_directory"]])
