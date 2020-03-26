@@ -7,6 +7,7 @@
 #' @param compartments      Optional character vector specifying cellular compartments. default: \code{c("cells", "cytoplasm", "nuclei")}.
 #' @param operation         Optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. See \link[cytominer]{aggregate}. default: \code{"mean"}.
 #' @param strata            Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.
+#' @param image_variables   Character vector specifying grouping variables for aggregation. default: \code{NULL}.
 #' @param variables         Optional character vector specifying observation variables. default: \code{"all"}.
 #' @param univariate        Optional boolean specifying whether aggregation function is univariate (vs multivariate). default: \code{"TRUE"}.
 #' @importFrom magrittr %>%
@@ -17,12 +18,13 @@ aggregate <- function(sqlite_file,
                       compartments = c("cells", "cytoplasm", "nuclei"),
                       operation = "mean",
                       strata = c("Metadata_Plate", "Metadata_Well"),
+                      image_variables = NULL,
                       variables = "all",
                       univariate = TRUE) {
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file,
                        loadable.extensions = TRUE)
 
-  # columns by which to join image table and objec tables
+  # columns by which to join image table and object tables
   image_object_join_columns <- c("TableNumber", "ImageNumber")
 
   image <- dplyr::tbl(src = db, "image") %>%
@@ -62,6 +64,23 @@ aggregate <- function(sqlite_file,
     compartments %>%
     purrr::map(aggregate_objects) %>%
     purrr::reduce(dplyr::inner_join, by = strata)
+
+  futile.logger::flog.info(paste0("Started aggregating images"))
+
+  if(!is.null(image_variables)) {
+    aggregate_images <-
+      cytominer::aggregate(
+        population = dplyr::tbl(src = db, "image"),
+        variables = image_variables,
+        strata = strata,
+        operation = operation,
+        univariate = univariate
+      ) %>%
+      dplyr::collect()
+
+    aggregated %<>%
+      dplyr::inner_join(aggregate_images)
+  }
 
   futile.logger::flog.info(paste0("Writing aggregated to ", output_file))
 

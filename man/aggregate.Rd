@@ -6,8 +6,8 @@
 \usage{
 aggregate(sqlite_file, output_file, compartments = c("cells",
   "cytoplasm", "nuclei"), operation = "mean",
-  strata = c("Metadata_Plate", "Metadata_Well"), variables = "all",
-  univariate = TRUE)
+  strata = c("Metadata_Plate", "Metadata_Well"),
+  image_variables = NULL, variables = "all", univariate = TRUE)
 }
 \arguments{
 \item{sqlite_file}{SQLite database storing morphological profiles.}
@@ -19,6 +19,8 @@ aggregate(sqlite_file, output_file, compartments = c("cells",
 \item{operation}{Optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. See \link[cytominer]{aggregate}. default: \code{"mean"}.}
 
 \item{strata}{Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.}
+
+\item{image_variables}{Character vector specifying grouping variables for aggregation. default: \code{NULL}.}
 
 \item{variables}{Optional character vector specifying observation variables. default: \code{"all"}.}
 
