@@ -24,6 +24,12 @@ test_that("`sample` pulls all replicates", {
   expect_equal(actual, expected)
 
   file.remove(sampled_csv)
+
+  # to test the script, do this and verify that the output file
+  # inst/extdata/parameters/batch0/sample/normalized_sample.csv
+  # does not change
+  # inst/scripts/cytotools_sample -b batch0 -f '_normalized.csv$' -o inst/extdata/parameters/batch0/sample/normalized_sample.csv -w inst/extdata
+
 })
 
 test_that("`sample` pulls N replicates", {
