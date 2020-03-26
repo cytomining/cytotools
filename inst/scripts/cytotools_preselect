@@ -10,14 +10,14 @@ Usage:
 
 options:
   -h --help                        Show this screen.
-  -i <file> --input=<file>         Test data on which to perform variable selection operations.
+  -i <file> --input=<file>         Test data on which to perform variable selection operations. Must be CSV, rds, or feather.
   -r <list> --operations=<list>    Comma-separated list of operations.
-  -n <n> --replicates=<n>          Number of replicates selected per plate map.
+  -n <n> --replicates=<n>          Number of replicates selected per plate map. Required for the operation "replicate_correlation".
   -b <id> --batch_id=<id>          Batch ID.
-  -s <query> --subset=<query>      Query to create the training data by subsetting.
+  -s <query> --subset=<query>      Query to create the training data by subsetting. Regex must select CSVs only. Default selects everything.
   -c <n> --cores=<n>               Number of CPU cores used for parallel computing.
-  -o <file> --output_directory     Directory to save output files to [default: workspace_directory/parameters/batch_id/variable_selection/].
-  -w <file> --workspace_directory  Root directory containing backend and metadata subdirectories [default: .]' -> doc
+  -o <file> --output_directory     Output directory for preselected feature names. If unspecified, defaults to <workspace_directory>/parameters/<batch_id>/variable_selection/.
+  -w <file> --workspace_directory  Root directory containing backend and metadata subdirectories. Can be relative or absolute. [default: .]' -> doc
 
 opts <- docopt::docopt(doc)
 
