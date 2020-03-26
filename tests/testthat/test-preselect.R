@@ -53,4 +53,8 @@ test_that("`preselect` with correlation_threshold, variance_threshold, replicate
 
     expect_equal(actual, expected)
   }
+  # to test the script, do this and verify that the files in
+  # inst/extdata/parameters/batch0/
+  # do not change
+  # inst/scripts/cytotools_preselect -i inst/extdata/parameters/batch0/sample/normalized_sample.csv -s "Metadata_Plate_Map_Name == '''C-7161-01-LM6-001'''" -r correlation_threshold,variance_threshold,replicate_correlation -b batch0 -n 2 -w inst/extdata
 })

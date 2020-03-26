@@ -28,10 +28,16 @@ test_that("`aggregate` aggregates data per well", {
   expect_equal(actual, expected)
 
   file.remove(aggregated_csv)
+
+  # to test the script, do this and verify that the output file
+  # inst/extdata/backend/batch0/SQ00015116/SQ00015116.csv
+  # does not change
+  # inst/scripts/cytotools_aggregate inst/extdata/backend/batch0/SQ00015116/SQ00015116.sqlite -o inst/extdata/backend/batch0/SQ00015116/SQ00015116.csv -m mean
 })
 
 test_that(
   "`aggregate` aggregates data per well only in specified compartments", {
+
     futile.logger::flog.threshold(futile.logger::WARN)
 
     aggregated_csv <- tempfile("SQ00015116.csv")

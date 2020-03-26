@@ -6,7 +6,7 @@ extends <- methods::extends
 'preselect
 
 Usage:
-  preselect.R -i <file> -r <list> [-b <id>] [-n <n>] [-s <query>] [-c <n>]
+  preselect.R -i <file> -r <list> [-b <id>] [-n <n>] [-s <query>] [-c <n>] [-w <dir>]
 
 options:
   -h --help                        Show this screen.

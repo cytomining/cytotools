@@ -6,7 +6,7 @@ extends <- methods::extends
 'sample
 
 Usage:
-  sample -b <id> -f <pattern> [-n <n>] -o <file>
+  sample -b <id> -f <pattern> [-n <n>] -o <file> [-w dir]
 
 Options:
   -h --help                             Show this screen.
@@ -14,7 +14,7 @@ Options:
   -f <pattern> --pattern=<pattern>      Regular expression specifying the filenames containing the profiles from which to sample. Only CSVs are allowed.
   -n <n> --replicates=<n>               Number of replicates to select per plate map. If unspecified, all replicates are selected.
   -o <file> --output=<file>             Output file. The extension should be either csv, rds, or feather.
-  -w <file> --workspace_directory       Root directory containing backend and metadata subdirectories [default: .]' -> doc
+  -w <dir> --workspace_directory        Root directory containing backend and metadata subdirectories [default: .]' -> doc
 
 opts <- docopt::docopt(doc)
 
