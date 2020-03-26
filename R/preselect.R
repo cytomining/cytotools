@@ -85,7 +85,6 @@ preselect <- function(input, operations,
         ) %>%
         dplyr::collect()
     } else if (operation == "replicate_correlation") {
-
       feature_replicate_correlations <-
         df %>%
         cytominer::replicate_correlation(

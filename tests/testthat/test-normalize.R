@@ -12,10 +12,12 @@ test_that("`normalize` normalizes data", {
       package = "cytotools"
     )
 
-  normalize(input_file = aggregated_csv,
-            output_file = normalized_csv,
-            operation = "robustize",
-            subset = "Metadata_broad_sample_type == 'control'")
+  normalize(
+    input_file = aggregated_csv,
+    output_file = normalized_csv,
+    operation = "robustize",
+    subset = "Metadata_broad_sample_type == 'control'"
+  )
 
   expected_csv <-
     system.file(
@@ -57,12 +59,14 @@ test_that("`normalize` normalizes data sampling from single cell data", {
       package = "cytotools"
     )
 
-  normalize(input_file = aggregated_csv,
-            sample_single_cell = TRUE,
-            input_sqlite_file = sqlite_file,
-            output_file = normalized_csv,
-            operation = "robustize",
-            subset = "Metadata_broad_sample_type == 'control'")
+  normalize(
+    input_file = aggregated_csv,
+    sample_single_cell = TRUE,
+    input_sqlite_file = sqlite_file,
+    output_file = normalized_csv,
+    operation = "robustize",
+    subset = "Metadata_broad_sample_type == 'control'"
+  )
 
   expected_csv <-
     system.file(
@@ -83,5 +87,4 @@ test_that("`normalize` normalizes data sampling from single cell data", {
   # inst/extdata/backend/batch0/SQ00015116/SQ00015116_normalized_single_cell.csv
   # does not change
   # inst/scripts/cytotools_normalize -b batch0 -p SQ00015116 -w inst/extdata/ -g -o inst/extdata/backend/batch0/SQ00015116/SQ00015116_normalized_single_cell.csv -s "Metadata_broad_sample_type == '''control'''"
-
 })

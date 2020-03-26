@@ -33,10 +33,7 @@ normalize <- function(input_file = NULL,
                       workspace_dir = ".",
                       image_object_join_columns = c("TableNumber", "ImageNumber"),
                       well_unique_id_columns = c("Metadata_Plate", "Metadata_Well"),
-                      well_unique_id_columns_db_prefix = "Image_"
-
-) {
-
+                      well_unique_id_columns_db_prefix = "Image_") {
   if (is.null(input_file) && (is.null(batch_id) || is.null(plate_id))) {
     stop("Either input_file or batch_id and plate_id should be specified.")
   }
@@ -50,18 +47,18 @@ normalize <- function(input_file = NULL,
   }
 
   if (is.null(input_file)) {
-    input_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_augmented.csv", plate_id))
+    input_file <- file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_augmented.csv", plate_id))
   }
 
   if (is.null(input_sqlite_file)) {
-    input_sqlite_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s.sqlite", plate_id))
+    input_sqlite_file <- file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s.sqlite", plate_id))
   }
 
   if (is.null(output_file)) {
-    output_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_normalized.csv", plate_id))
+    output_file <- file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_normalized.csv", plate_id))
   }
 
-  if(is.null(subset)) {
+  if (is.null(subset)) {
     subset <- "Metadata_Plate != 'dummy'"
   }
 
@@ -74,7 +71,7 @@ normalize <- function(input_file = NULL,
   profiles <- readr::read_csv(input_file)
 
   # prepare to load objects by loading image table
-  if(sample_single_cell) {
+  if (sample_single_cell) {
     if (!file.exists(input_sqlite_file)) {
       stop(paste0(input_sqlite_file, " does not exist"))
     }
@@ -95,13 +92,11 @@ normalize <- function(input_file = NULL,
     image <- dplyr::tbl(src = db, "image") %>%
       dplyr::select(c(image_object_join_columns, well_unique_id_columns)) %>%
       dplyr::inner_join(metadata, by = well_unique_id_columns)
-
   }
 
   load_objects <- function(compartment) {
     dplyr::tbl(src = db, compartment) %>%
       dplyr::inner_join(image, by = image_object_join_columns)
-
   }
 
   load_profiles <- function(compartment) {
@@ -109,7 +104,8 @@ normalize <- function(input_file = NULL,
     # names
     profiles %>%
       dplyr::select(dplyr::matches(
-        stringr::str_c("Metadata_", "|", compartment_tag(compartment))))
+        stringr::str_c("Metadata_", "|", compartment_tag(compartment))
+      ))
   }
 
   normalize_profiles <- function(compartment) {
@@ -122,7 +118,7 @@ normalize <- function(input_file = NULL,
     # variables are columns with a prefix as one of the compartments
     # e.g. Nuclei_
     variables <- colnames(sample) %>%
-        stringr::str_subset(compartment_tag(compartment))
+      stringr::str_subset(compartment_tag(compartment))
 
     # get the sample on which to compute the normalization parameters
     sample %<>%
@@ -154,6 +150,5 @@ normalize <- function(input_file = NULL,
 
   if (sample_single_cell) {
     DBI::dbDisconnect(db)
-
   }
 }

@@ -29,7 +29,6 @@ test_that("`sample` pulls all replicates", {
   # inst/extdata/parameters/batch0/sample/normalized_sample.csv
   # does not change
   # inst/scripts/cytotools_sample -b batch0 -f '_normalized.csv$' -o inst/extdata/parameters/batch0/sample/normalized_sample.csv -w inst/extdata
-
 })
 
 test_that("`sample` pulls N replicates", {
