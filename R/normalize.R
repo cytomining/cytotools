@@ -50,15 +50,15 @@ normalize <- function(input_file = NULL,
   }
 
   if (is.null(input_file)) {
-    input_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_augmented.csv"))
+    input_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_augmented.csv", plate_id))
   }
 
   if (is.null(input_sqlite_file)) {
-    input_sqlite_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s.sqlite"))
+    input_sqlite_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s.sqlite", plate_id))
   }
 
   if (is.null(output_file)) {
-    output_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_normalized.csv"))
+    output_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_normalized.csv", plate_id))
   }
 
   if(is.null(subset)) {
@@ -79,19 +79,19 @@ normalize <- function(input_file = NULL,
       stop(paste0(path, " does not exist"))
     }
 
-    db <- src_sqlite(path = path)
+    db <- dplyr::src_sqlite(path = input_sqlite_file)
 
     # get metadata and copy to db
     metadata <-
       profiles %>%
-      select(matches("Metadata_")) %>%
-      distinct()
+      dplyr::select(matches("Metadata_")) %>%
+      dplyr::distinct()
 
-    metadata <- copy_to(db, metadata)
+    metadata <- dplyr::copy_to(db, metadata)
 
-    image <- tbl(src = db, "image") %>%
-      select(c(image_object_join_columns, well_unique_id_columns)) %>%
-      inner_join(metadata, by = well_unique_id_columns)
+    image <- dplyr::tbl(src = db, "image") %>%
+      dplyr::select(c(image_object_join_columns, well_unique_id_columns)) %>%
+      dplyr::inner_join(metadata, by = well_unique_id_columns)
 
   }
 
