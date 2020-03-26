@@ -26,8 +26,7 @@ Options:
   -l <str> --well_unique_id_columns_db_prefix=<dir>  Prefix for well_unique_id_columns in the SQLite db. [default: Image_]' -> doc
 
 
-#opts <- docopt::docopt(doc)
-opts <- docopt::docopt(doc, "")
+opts <- docopt::docopt(doc)
 
 cytotools::normalize(input_file = opts[["input_file"]],
                      output_file = opts[["output_file"]],
