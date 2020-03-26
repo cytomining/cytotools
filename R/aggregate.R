@@ -17,10 +17,8 @@ aggregate <- function(sqlite_file,
                       operation = "mean",
                       strata = c("Metadata_Plate", "Metadata_Well"),
                       variables = "all") {
-  db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
-
-  # https://github.com/tidyverse/dplyr/issues/3093
-  RSQLite::initExtension(db)
+  db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file,
+                       loadable.extensions = TRUE)
 
   # columns by which to join image table and objec tables
   image_object_join_columns <- c("TableNumber", "ImageNumber")
