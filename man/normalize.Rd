@@ -4,25 +4,44 @@
 \alias{normalize}
 \title{Normalize profiles based on given control subset}
 \usage{
-normalize(batch_id, plate_id, subset, backend_directory = file.path("..",
-  "..", "backend"), compartments = c("cells", "cytoplasm", "nuclei"),
-  operation = "robustize", strata = c("Metadata_Plate"))
+normalize(input_file = NULL, output_file = NULL, subset = NULL,
+  sample_single_cell = FALSE, input_sqlite_file = NULL,
+  compartments = c("cells", "cytoplasm", "nuclei"),
+  operation = "robustize", strata = c("Metadata_Plate"),
+  batch_id = NULL, plate_id = NULL, workspace_dir = ".",
+  image_object_join_columns = c("TableNumber", "ImageNumber"),
+  well_unique_id_columns = c("Metadata_Plate", "Metadata_Well"),
+  well_unique_id_columns_db_prefix = "Image_")
 }
 \arguments{
-\item{batch_id}{batch ID given as directory name.}
+\item{input_file}{Input file with profiles to be normalized. If \code{NULL}, reads from \code{workspace_dir/backend/batch_id/plate_id/plate_id_augmented.csv}. default: \code{NULL}.}
 
-\item{plate_id}{plate ID given as the directory.}
+\item{output_file}{Output file for storing normalized profiles. If \code{NULL}, writes to \code{workspace_dir/backend/batch_id/plate_id/plate_id_normalized.csv}. default: \code{NULL}.}
 
-\item{subset}{query to define the control poulation used for normalization \code{("Metadata_line_num == 5")}.}
+\item{subset}{Query to define the control poulation used for normalization. Default value selects all wells. default: \code{("Metadata_Plate != 'dummy'")}.}
 
-\item{backend_directory}{top-level directory of the experiment, default: \code{"../../backend/"}.}
+\item{sample_single_cell}{Subset comprises single cell samples if \code{TRUE}. default: \code{FALSE}.}
 
-\item{compartments}{optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.}
+\item{input_sqlite_file}{Input file with single cell profiles. If \code{NULL} and \code{sample_single_cell} is \code{TRUE} then reads from \code{workspace_dir/backend/batch_id/plate_id/plate_id.sqlite}. default: \code{NULL}.}
 
-\item{operation}{method used for normalization, default: \code{"robustize"}. See cytominer::normalize.}
+\item{compartments}{Optional character vector specifying cellular compartments. default: \code{c("cells", "cytoplasm", "nuclei")}.}
 
-\item{strata}{character vector specifying grouping variables for normalization. default \code{c("Metadata_Plate")}.}
+\item{operation}{Method used for normalization. See \link[cytominer]{normalize}. default: \code{"robustize"}.}
+
+\item{strata}{Character vector specifying grouping variables for normalization. default: \code{c("Metadata_Plate")}.}
+
+\item{batch_id}{Batch ID. Used for generating input_file and output_file if either is not specified. default: \code{NULL}.}
+
+\item{plate_id}{Plate ID. Used for generating input_file and output_file if either is not specified. default: \code{NULL}.}
+
+\item{workspace_dir}{Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.}
+
+\item{image_object_join_columns}{Columns by which to join image table and object tables. default: \code{c("TableNumber", "ImageNumber")}.}
+
+\item{well_unique_id_columns}{Columns by which to uniquely identify a well. default: \code{c("Metadata_Plate", "Metadata_Well")}.}
+
+\item{well_unique_id_columns_db_prefix}{Prefix for \code{well_unique_id_columns} in the SQLite db. default: \code{"Image_"}}
 }
 \description{
-\code{normalize} normalizes data based on the specified normn method.
+\code{normalize} normalizes data based on the specified normalization method.
 }

@@ -1,78 +1,99 @@
 #' Normalize profiles based on given control subset
 #'
-#' \code{normalize} normalizes data based on the specified normn method.
+#' \code{normalize} normalizes data based on the specified normalization method.
 #'
-#' @param batch_id             batch ID given as directory name.
-#' @param plate_id             plate ID given as the directory.
-#' @param subset               query to define the control poulation used for normalization \code{("Metadata_line_num == 5")}.
-#' @param backend_directory    top-level directory of the experiment, default: \code{"../../backend/"}.
-#' @param compartments         optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.
-#' @param operation            method used for normalization, default: \code{"robustize"}. See cytominer::normalize.
-#' @param strata               character vector specifying grouping variables for normalization. default \code{c("Metadata_Plate")}.
+#' @param input_file                       Input file with profiles to be normalized. If \code{NULL}, reads from \code{workspace_dir/backend/batch_id/plate_id/plate_id_augmented.csv}. default: \code{NULL}.
+#' @param output_file                      Output file for storing normalized profiles. If \code{NULL}, writes to \code{workspace_dir/backend/batch_id/plate_id/plate_id_normalized.csv}. default: \code{NULL}.
+#' @param subset                           Query to define the control poulation used for normalization. Default value selects all wells. default: \code{("Metadata_Plate != 'dummy'")}.
+#' @param sample_single_cell               Subset comprises single cell samples if \code{TRUE}. default: \code{FALSE}.
+#' @param input_sqlite_file                Input file with single cell profiles. If \code{NULL} and \code{sample_single_cell} is \code{TRUE} then reads from \code{workspace_dir/backend/batch_id/plate_id/plate_id.sqlite}. default: \code{NULL}.
+#' @param compartments                     Optional character vector specifying cellular compartments. default: \code{c("cells", "cytoplasm", "nuclei")}.
+#' @param operation                        Method used for normalization. See \link[cytominer]{normalize}. default: \code{"robustize"}.
+#' @param strata                           Character vector specifying grouping variables for normalization. default: \code{c("Metadata_Plate")}.
+#' @param batch_id                         Batch ID. Used for generating input_file and output_file if either is not specified. default: \code{NULL}.
+#' @param plate_id                         Plate ID. Used for generating input_file and output_file if either is not specified. default: \code{NULL}.
+#' @param workspace_dir                    Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.
+#' @param image_object_join_columns        Columns by which to join image table and object tables. default: \code{c("TableNumber", "ImageNumber")}.
+#' @param well_unique_id_columns           Columns by which to uniquely identify a well. default: \code{c("Metadata_Plate", "Metadata_Well")}.
+#' @param well_unique_id_columns_db_prefix Prefix for \code{well_unique_id_columns} in the SQLite db. default: \code{"Image_"}
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @export
-normalize <- function(batch_id,
-                      plate_id,
-                      subset,
-                      backend_directory = file.path("..", "..", "backend"),
+normalize <- function(input_file = NULL,
+                      output_file = NULL,
+                      subset = NULL,
+                      sample_single_cell = FALSE,
+                      input_sqlite_file = NULL,
                       compartments = c("cells", "cytoplasm", "nuclei"),
                       operation = "robustize",
-                      strata = c("Metadata_Plate")
-                      ) {
+                      strata = c("Metadata_Plate"),
+                      batch_id = NULL,
+                      plate_id = NULL,
+                      workspace_dir = ".",
+                      image_object_join_columns = c("TableNumber", "ImageNumber"),
+                      well_unique_id_columns = c("Metadata_Plate", "Metadata_Well"),
+                      well_unique_id_columns_db_prefix = "Image_"
 
-  full_backend_directory <- file.path(backend_directory, batch_id, plate_id)
+) {
 
-  # columns by which to join image table and object tables
-  image_object_join_columns <- c("TableNumber", "ImageNumber")
+  if (is.null(input_file) && (is.null(batch_id) || is.null(plate_id))) {
+    stop("Either input_file or batch_id and plate_id should be specified.")
+  }
 
-  # columns by which to uniquely identify a well
-  well_unique_id_columns <- c("Metadata_Plate", "Metadata_Well")
+  if (is.null(input_file) && (is.null(batch_id) || is.null(plate_id))) {
+    stop("Either input_file or batch_id and plate_id should be specified.")
+  }
 
-  # the columns have a prefix of "Image_" in the SQLite db.
-  well_unique_id_columns_db <- stringr::str_c("Image_", well_unique_id_columns)
+  if (sample_single_cell && is.null(input_sqlite_file) && (is.null(batch_id) || is.null(plate_id))) {
+    stop("Either input_sqlite_file or batch_id and plate_id should be specified when sample_single_cell is TRUE.")
+  }
+
+  if (is.null(input_file)) {
+    input_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_augmented.csv"))
+  }
+
+  if (is.null(input_sqlite_file)) {
+    input_sqlite_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s.sqlite"))
+  }
+
+  if (is.null(output_file)) {
+    output_file = file.path(workspace_dir, "backend", batch_id, plate_id, sprintf("%s_normalized.csv"))
+  }
+
+  if(is.null(subset)) {
+    subset <- "Metadata_Plate != 'dummy'"
+  }
+
+  well_unique_id_columns_db <- stringr::str_c(well_unique_id_columns_db_prefix, well_unique_id_columns)
 
   # compartment tag converts nuclei to ^Nuclei_
   compartment_tag <-
     function(compartment) paste0("^", stringr::str_to_title(compartment), "_")
 
-  # TODO: parse file name as input argument of cytotools_normalize
-  profiles <-
-    readr::read_csv(paste(full_backend_directory,
-                          paste0(plate_id, "_augmented.csv"), sep = "/"))
+  profiles <- readr::read_csv(input_file)
 
-  # prepare to load objects by loading image table so we only have to load the
-  # data once.
+  # prepare to load objects by loading image table
+  if(sample_single_cell) {
+    if (!file.exists(input_sqlite_file)) {
+      stop(paste0(path, " does not exist"))
+    }
 
-    # if (sample_single_cell) {
-    #s qlite_file <- paste(full_backend_directory,
-    #                     paste0(plate_id, ".sqlite"), sep = "/")
+    db <- src_sqlite(path = path)
 
-    # TODO: if file doesn't exist at path then copy it from S3 to a tmpdir
-    #if (!file.exists(sqlite_file)) {
-    #  stop(paste0(sqlite_file, " does not exist"))
-    # }
+    # get metadata and copy to db
+    metadata <-
+      profiles %>%
+      select(matches("Metadata_")) %>%
+      distinct()
 
-    # db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file)
-    #
-    # #https://github.com/tidyverse/dplyr/issues/3093
-    # RSQLite::initExtension(db)
-    #
-    # # get metadata and copy to db
-    # metadata <-
-    #   profiles %>%
-    #   dplyr::select(dplyr::matches("Metadata_")) %>%
-    #   dplyr::distinct()
-    #   metadata <- dplyr::copy_to(db, metadata)
-    #
-    # # TODO: change the renames to use tidyeval form
-    # image <- dplyr::tbl(src = db, "image") %>%
-    #   dplyr::select(c(image_object_join_columns, well_unique_id_columns_db)) %>%
-    #   dplyr::rename(Metadata_Plate = Image_Metadata_Plate) %>%
-    #   dplyr::rename(Metadata_Well = Image_Metadata_Well) %>%
-    #   dplyr::inner_join(metadata, by = well_unique_id_columns)
-    # }
+    metadata <- copy_to(db, metadata)
+
+    image <- tbl(src = db, "image") %>%
+      select(c(image_object_join_columns, well_unique_id_columns)) %>%
+      inner_join(metadata, by = well_unique_id_columns)
+
+  }
 
   load_objects <- function(compartment) {
     dplyr::tbl(src = db, compartment) %>%
@@ -102,7 +123,7 @@ normalize <- function(batch_id,
 
     # get the sample on which to compute the normalization parameters
     sample %<>%
-      dplyr::filter_(subset) %>%
+      dplyr::filter(eval(parse(text = subset))) %>%
       dplyr::collect(n = Inf) %>%
       dplyr::mutate_at(variables, as.double)
 
@@ -126,9 +147,7 @@ normalize <- function(batch_id,
     purrr::map(normalize_profiles) %>%
     purrr::reduce(dplyr::inner_join, by = metadata)
 
-  normalized %>%
-    readr::write_csv(paste(full_backend_directory,
-                           paste0(plate_id, "_normalized.csv"), sep = "/"))
+  normalized %>% readr::write_csv(output_file)
 
   if (sample_single_cell) {
     DBI::dbDisconnect(db)
