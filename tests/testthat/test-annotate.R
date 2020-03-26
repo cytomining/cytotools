@@ -25,6 +25,11 @@ test_that("`annotate` adds plate and well metadata", {
   expect_equal(actual, expected)
 
   file.remove(annotated_csv)
+
+  # to test the script, do this and verify that the output file
+  # inst/extdata/backend/batch0/SQ00015116/SQ00015116_augmented.csv
+  # does not change
+  # inst/scripts/cytotools_annotate -b batch0 -p SQ00015116 -d -w inst/extdata
 })
 
 test_that("`annotate` with format_broad_cmap adds metadata columns", {
