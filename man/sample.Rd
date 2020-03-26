@@ -4,7 +4,8 @@
 \alias{sample}
 \title{Sample selects replicates across specified plates.}
 \usage{
-sample(batch_id, pattern, output, replicates = NULL, workspace_dir = ".")
+sample(batch_id, pattern, output, replicates = NULL,
+  workspace_dir = ".")
 }
 \arguments{
 \item{batch_id}{Batch ID.}
@@ -18,5 +19,13 @@ sample(batch_id, pattern, output, replicates = NULL, workspace_dir = ".")
 \item{workspace_dir}{Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.}
 }
 \description{
-\code{sample} replicates across specified plates, and aggregates the result in a single file.
+\code{sample} replicates across specified plates, and aggregates the
+result in a single file. It assumes the following files exist:
+\itemize{
+  \item \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the
+  plate barcodes to the corresponding platemaps,
+  \item For each plate barcode, a CSV file
+\code{<workspace_dir>/backend/<batch_id>/<file-matching-specified-pattern>}
+which will be among the files included in the sample.
+}
 }
