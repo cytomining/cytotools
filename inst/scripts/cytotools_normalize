@@ -21,10 +21,9 @@ Options:
   -b <id> --batch_id=<id>                  Batch ID. Used for generating input_file and output_file if either is not specified.
   -p <id> --plate_id=<id>                  Plate ID. Used for generating input_file and output_file if either is not specified.
   -w <dir> --workspace_dir=<dir>           Root directory containing backend and metadata subdirectories. Can be relative or absolute. [default: .].
-  -j <str> --image_object_join_columns=<dir>         Comma-separated list of columns by which to join image table and object tables. [default: TableNumber,ImageNumber].
-  -k <str> --well_unique_id_columns=<dir>            Comma-separated list of columns by which to uniquely identify a well. [default: Metadata_Plate,Metadata_Well].
-  -l <str> --well_unique_id_columns_db_prefix=<dir>  Prefix for well_unique_id_columns in the SQLite db. [default: Image_]' -> doc
-
+  -j <str> --image_object_join_columns=<str>         Comma-separated list of columns by which to join image table and object tables. [default: TableNumber,ImageNumber].
+  -k <str> --well_unique_id_columns=<str>            Comma-separated list of columns by which to uniquely identify a well. [default: Metadata_Plate,Metadata_Well].
+  -l <str> --well_unique_id_columns_db_prefix=<str>  Prefix for well_unique_id_columns in the SQLite db. If unspecified then no prefix is used.' -> doc
 
 opts <- docopt::docopt(doc)
 
@@ -41,4 +40,5 @@ cytotools::normalize(input_file = opts[["input_file"]],
                      workspace_dir = opts[["workspace_dir"]],
                      image_object_join_columns = stringr::str_split(opts[["image_object_join_columns"]], ",")[[1]],
                      well_unique_id_columns = stringr::str_split(opts[["well_unique_id_columns"]], ",")[[1]],
-                     well_unique_id_columns_db_prefix = opts[["well_unique_id_columns_db_prefix"]])
+                     well_unique_id_columns_db_prefix = ifelse(is.null(opts[["well_unique_id_columns_db_prefix"]]), "", opts[["well_unique_id_columns_db_prefix"]]))
+

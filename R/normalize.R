@@ -15,7 +15,7 @@
 #' @param workspace_dir                    Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.
 #' @param image_object_join_columns        Columns by which to join image table and object tables. default: \code{c("TableNumber", "ImageNumber")}.
 #' @param well_unique_id_columns           Columns by which to uniquely identify a well. default: \code{c("Metadata_Plate", "Metadata_Well")}.
-#' @param well_unique_id_columns_db_prefix Prefix for \code{well_unique_id_columns} in the SQLite db. default: \code{"Image_"}
+#' @param well_unique_id_columns_db_prefix Prefix for \code{well_unique_id_columns} in the SQLite db. default: \code{""}
 #'
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
@@ -33,7 +33,7 @@ normalize <- function(input_file = NULL,
                       workspace_dir = ".",
                       image_object_join_columns = c("TableNumber", "ImageNumber"),
                       well_unique_id_columns = c("Metadata_Plate", "Metadata_Well"),
-                      well_unique_id_columns_db_prefix = "Image_") {
+                      well_unique_id_columns_db_prefix = "") {
   if (is.null(input_file) && (is.null(batch_id) || is.null(plate_id))) {
     stop("Either input_file or batch_id and plate_id should be specified.")
   }
@@ -62,7 +62,13 @@ normalize <- function(input_file = NULL,
     subset <- "Metadata_Plate != 'dummy'"
   }
 
-  well_unique_id_columns_db <- stringr::str_c(well_unique_id_columns_db_prefix, well_unique_id_columns)
+  # cytominer-database ingest by default does not add Image_ prefix
+  # https://github.com/cytomining/cytominer-database/blob/3926b55627e76a319460d6ac3ff4bdf65e1f5f98/cytominer_database/ingest.py#L128
+  if (well_unique_id_columns_db_prefix != "") {
+    stop("Prefixes for unique identifiers for wells in image table currently not supported.")
+  }
+
+  #well_unique_id_columns_db <- stringr::str_c(well_unique_id_columns_db_prefix, well_unique_id_columns)
 
   # compartment tag converts nuclei to ^Nuclei_
   compartment_tag <-
@@ -76,10 +82,8 @@ normalize <- function(input_file = NULL,
       stop(paste0(input_sqlite_file, " does not exist"))
     }
 
-    db <- DBI::dbConnect(RSQLite::SQLite(), input_sqlite_file)
-
-    # https://github.com/tidyverse/dplyr/issues/3093
-    RSQLite::initExtension(db)
+    db <- DBI::dbConnect(RSQLite::SQLite(), input_sqlite_file,
+                         loadable.extensions = TRUE)
 
     # get metadata and copy to db
     metadata <-
@@ -89,6 +93,9 @@ normalize <- function(input_file = NULL,
 
     metadata <- dplyr::copy_to(db, metadata)
 
+    # cytominer-database ingest by default does not add Image_ prefix
+    # https://github.com/cytomining/cytominer-database/blob/3926b55627e76a319460d6ac3ff4bdf65e1f5f98/cytominer_database/ingest.py#L128
+    # This will fail if we have the prefix
     image <- dplyr::tbl(src = db, "image") %>%
       dplyr::select(c(image_object_join_columns, well_unique_id_columns)) %>%
       dplyr::inner_join(metadata, by = well_unique_id_columns)
