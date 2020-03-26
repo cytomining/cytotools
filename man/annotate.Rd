@@ -29,10 +29,10 @@ annotate(batch_id, plate_id, cell_id = NULL, external_metadata = NULL,
 \code{annotate} adds plate and well metadata, as well as optional external
 metadata. It assumes the following files exist:
 \itemize{
-  \item \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the
+  \item \code{<workspace_dir>/metadata/<batch_id>/barcode_platemap.csv} which maps the
   plate barcodes to the corresponding platemaps,
   \item For each platemap, a file
-\code{<workspace_dir>/metadata/platemap/<plate_map_name>.txt} which
+\code{<workspace_dir>/metadata/<batch_id>/platemap/<plate_map_name>.txt} which
 contains the metadata for each well position
 }
 Additional metadata can be appended to the output file via the optional

@@ -1,0 +1,44 @@
+#!/usr/bin/env Rscript
+
+# https://github.com/tidyverse/dplyr/issues/1760
+extends <- methods::extends
+
+'normalize
+
+Usage:
+cytotools_normalize [-i <file> -o <file> -s <query> -g -q <file> -c <str> -m <str> -r <str> -b <id> -p <id> -w <dir> -j <str> -k <str> -l <str>]
+
+Options:
+  -h --help                                Show this screen.
+  -i <file> --input_file=<file>            Input file with profiles to be normalized. If not specified, reads from <workspace_dir>/backend/<batch_id>/<plate_id>/<plate_id>_augmented.csv.
+  -o <file> --output_file=<file>           Output file for storing normalized profiles. If not specified, writes to <workspace_dir>/backend/<batch_id>/<plate_id>/<plate_id>_normalized.csv.
+  -s <query> --subset=<query>              Query to define the control poulation used for normalization. Default value selects all wells.
+  -g --sample_single_cell                  Subset comprises single cell samples.
+  -q <file> --input_sqlite_file=<file>     Input file with single cell profiles. If unspecified and sample_single_cell is TRUE then reads from <workspace_dir>/backend/<batch_id>/<plate_id>/<plate_id>_sqlite.
+  -c <str> --compartments=<str>            Comma-separated list of cellular compartments. [default: cells,cytoplasm,nuclei].
+  -m <str> --operation=<str>               Method used for normalization. [default: robustize].
+  -r <str> --strata=<str>                  Comma-separated list specifying grouping variables for normalization. [default: Metadata_Plate].
+  -b <id> --batch_id=<id>                  Batch ID. Used for generating input_file and output_file if either is not specified.
+  -p <id> --plate_id=<id>                  Plate ID. Used for generating input_file and output_file if either is not specified.
+  -w <dir> --workspace_dir=<dir>           Root directory containing backend and metadata subdirectories. Can be relative or absolute. [default: .].
+  -j <str> --image_object_join_columns=<dir>         Comma-separated list of columns by which to join image table and object tables. [default: TableNumber,ImageNumber].
+  -k <str> --well_unique_id_columns=<dir>            Comma-separated list of columns by which to uniquely identify a well. [default: Metadata_Plate,Metadata_Well].
+  -l <str> --well_unique_id_columns_db_prefix=<dir>  Prefix for well_unique_id_columns in the SQLite db. [default: Image_]' -> doc
+
+
+opts <- docopt::docopt(doc)
+
+cytotools::normalize(input_file = opts[["input_file"]],
+                     output_file = opts[["output_file"]],
+                     subset = opts[["subset"]],
+                     sample_single_cell = opts[["sample_single_cell"]],
+                     input_sqlite_file = opts[["input_sqlite_file"]],
+                     compartments = stringr::str_split(opts[["compartments"]], ",")[[1]],
+                     operation = opts[["operation"]],
+                     strata = c("Metadata_Plate"),
+                     batch_id = opts[["batch_id"]],
+                     plate_id = opts[["plate_id"]],
+                     workspace_dir = opts[["workspace_dir"]],
+                     image_object_join_columns = stringr::str_split(opts[["image_object_join_columns"]], ",")[[1]],
+                     well_unique_id_columns = stringr::str_split(opts[["well_unique_id_columns"]], ",")[[1]],
+                     well_unique_id_columns_db_prefix = opts[["well_unique_id_columns_db_prefix"]])

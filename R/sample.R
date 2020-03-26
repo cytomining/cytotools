@@ -1,7 +1,15 @@
 utils::globalVariables(c("Assay_Plate_Barcode", "replicate_id"))
 #' Sample selects replicates across specified plates.
 #'
-#' \code{sample} replicates across specified plates, and aggregates the result in a single file.
+#' \code{sample} replicates across specified plates, and aggregates the
+#' result in a single file. It assumes the following files exist:
+#' \itemize{
+#'   \item \code{<workspace_dir>/metadata/barcode_platemap.csv} which maps the
+#'   plate barcodes to the corresponding platemaps,
+#'   \item For each plate barcode, a CSV file
+#' \code{<workspace_dir>/backend/<batch_id>/<file-matching-specified-pattern>}
+#' which will be among the files included in the sample.
+#' }
 #'
 #' @param batch_id        Batch ID.
 #' @param pattern         Regular expression specifying the filenames containing the profiles from which to sample. Only CSVs are allowed.
@@ -31,7 +39,7 @@ sample <- function(batch_id, pattern, output,
   if (!is.null(replicates)) {
     # get the list of plates that retrieved using the pattern
     plate_list_retrieved <-
-      dplyr::data_frame(
+      dplyr::tibble(
         Assay_Plate_Barcode = lapply(file_list, function(file) {
           head(tail(stringr::str_split(file, "/")[[1]], 2), 1)
         }) %>%

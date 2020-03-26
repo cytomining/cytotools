@@ -4,10 +4,10 @@
 #'
 #' @param sqlite_file       SQLite database storing morphological profiles.
 #' @param output_file       Output file for storing aggregated profiles.
-#' @param compartments      optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.
-#' @param operation         optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"mean"}.
-#' @param strata            character vector specifying grouping variables for aggregation. default \code{c("Metadata_Plate", "Metadata_Well")}.
-#' @param variables         optional character vector specifying observation variables. default \code{"all"}.
+#' @param compartments      Optional character vector specifying cellular compartments. default: \code{c("cells", "cytoplasm", "nuclei")}.
+#' @param operation         Optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. See \link[cytominer]{aggregate}. default: \code{"mean"}.
+#' @param strata            Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.
+#' @param variables         Optional character vector specifying observation variables. default: \code{"all"}.
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @export

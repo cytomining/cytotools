@@ -2,8 +2,9 @@
 
 export(aggregate)
 export(annotate)
-export(hello)
+export(normalize)
 export(preselect)
+export(sample)
 importFrom(magrittr,"%<>%")
 importFrom(magrittr,"%>%")
 importFrom(magrittr,extract2)

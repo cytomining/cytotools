@@ -13,13 +13,13 @@ aggregate(sqlite_file, output_file, compartments = c("cells",
 
 \item{output_file}{Output file for storing aggregated profiles.}
 
-\item{compartments}{optional character vector specifying cellular compartments. default \code{c("cells", "cytoplasm", "nuclei")}.}
+\item{compartments}{Optional character vector specifying cellular compartments. default: \code{c("cells", "cytoplasm", "nuclei")}.}
 
-\item{operation}{optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. default \code{"mean"}.}
+\item{operation}{Optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. See \link[cytominer]{aggregate}. default: \code{"mean"}.}
 
-\item{strata}{character vector specifying grouping variables for aggregation. default \code{c("Metadata_Plate", "Metadata_Well")}.}
+\item{strata}{Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.}
 
-\item{variables}{optional character vector specifying observation variables. default \code{"all"}.}
+\item{variables}{Optional character vector specifying observation variables. default: \code{"all"}.}
 }
 \description{
 \code{aggregate} aggregates data based on the specified aggregation method.
