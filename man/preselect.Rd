@@ -11,17 +11,17 @@ preselect(input, operations, replicates = NULL, batch_id = NULL,
 \arguments{
 \item{input}{Test data on which to perform variable selection operations. Must be CSV, rds, or feather.}
 
-\item{operations}{List of operations to perform, as strings. Supported operations: \code{"correlation_threshold"}, \code{"variance_threshold"}, \code{"replicate_correlation"}.}
+\item{operations}{List of operations to perform, as strings. Supported operations: \code{"correlation_threshold"}, \code{"variance_threshold"}, \code{"replicate_correlation"}. See \link[cytominer]{select}.}
 
-\item{replicates}{Number of replicates to select per plate map. Required for the operation \code{"replicate_correlation"}. default: \code{NULL}.}
+\item{replicates}{Number of replicates to select per plate map. Required for the operation \code{"replicate_correlation"}. See \link[cytominer]{preselect}. default: \code{NULL}.}
 
 \item{batch_id}{Batch ID. Used for generating output_dir if the latter is not specified. default: \code{NULL}.}
 
-\item{subset}{Query to create the training data by subsetting. Must be CSVs. default: \code{NULL}.}
+\item{subset}{Query to create the training data by subsetting. Regex must select CSVs only. Default selects everything. default: \code{NULL}.}
 
 \item{cores}{Optional integer specifying number of CPU cores used for parallel computing using \code{doParallel}. default: \code{NULL}.}
 
-\item{output_dir}{Output directory for preselected feature names. If \code{NULL}, writes to \code{workspace_dir/parameters/batch_id/variable_selection/}. default: \code{NULL}.}
+\item{output_dir}{Output directory for preselected feature names. By default, writes to \code{workspace_dir/parameters/batch_id/variable_selection/}. default: \code{NULL}.}
 
 \item{workspace_dir}{Root directory containing backend and metadata subdirectories. Can be relative or absolute. default: \code{"."}.}
 }
