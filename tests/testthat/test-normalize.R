@@ -31,6 +31,11 @@ test_that("`normalize` normalizes data", {
   expect_equal(actual, expected)
 
   file.remove(normalized_csv)
+
+  # to test the script, do this and verify that the output file
+  # inst/extdata/backend/batch0/SQ00015116/SQ00015116_normalized_single_cell.csv
+  # does not change
+  # inst/scripts/cytotools_normalize -b batch0 -p SQ00015116 -w inst/extdata/ -o inst/extdata/backend/batch0/SQ00015116/SQ00015116_normalized.csv -s "Metadata_broad_sample_type == '''control'''"
 })
 
 test_that("`normalize` normalizes data sampling from single cell data", {
@@ -73,4 +78,10 @@ test_that("`normalize` normalizes data sampling from single cell data", {
   expect_equal(actual, expected)
 
   file.remove(normalized_csv)
+
+  # to test the script, do this and verify that the output file
+  # inst/extdata/backend/batch0/SQ00015116/SQ00015116_normalized_single_cell.csv
+  # does not change
+  # inst/scripts/cytotools_normalize -b batch0 -p SQ00015116 -w inst/extdata/ -g -o inst/extdata/backend/batch0/SQ00015116/SQ00015116_normalized_single_cell.csv -s "Metadata_broad_sample_type == '''control'''"
+
 })
