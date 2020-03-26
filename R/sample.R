@@ -39,7 +39,7 @@ sample <- function(batch_id, pattern, output,
   if (!is.null(replicates)) {
     # get the list of plates that retrieved using the pattern
     plate_list_retrieved <-
-      dplyr::data_frame(
+      dplyr::tibble(
         Assay_Plate_Barcode = lapply(file_list, function(file) {
           head(tail(stringr::str_split(file, "/")[[1]], 2), 1)
         }) %>%
