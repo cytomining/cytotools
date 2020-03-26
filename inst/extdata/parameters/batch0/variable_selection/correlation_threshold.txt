@@ -1,0 +1,5 @@
+variable
+Cytoplasm_AreaShape_Area
+Cytoplasm_Intensity_IntegratedIntensity_DNA
+Nuclei_AreaShape_Area
+Nuclei_Intensity_IntegratedIntensity_DNA

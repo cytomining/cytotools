@@ -1,0 +1,25 @@
+#!/usr/bin/env Rscript
+
+# https://github.com/tidyverse/dplyr/issues/1760
+extends <- methods::extends
+
+'sample
+
+Usage:
+  sample -b <id> -f <pattern> [-n <n>] -o <file>
+
+Options:
+  -h --help                             Show this screen.
+  -b <id> --batch_id=<id>               Batch ID.
+  -f <pattern> --pattern=<pattern>      Regular expression specifying the filenames containing the profiles from which to sample. Only CSVs are allowed.
+  -n <n> --replicates=<n>               Number of replicates to select per plate map. By default, all replicates are selected.
+  -o <file> --output=<file>             Output file. The extension should be either csv, rds, or feather.
+  -w <file> --workspace_directory       Root directory containing backend and metadata subdirectories [default: .]' -> doc
+
+opts <- docopt::docopt(doc)
+
+cytotools::sample(batch_id = opts[["batch_id"]],
+                  output = opts[["output"]],
+                  pattern = opts[["pattern"]],
+                  replicates = opts[["replicates"]],
+                  workspace_dir = opts[["workspace_directory"]])

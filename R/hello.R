@@ -7,5 +7,4 @@
 #' @export
 hello <- function(msgtext) {
   print(msgtext)
-
 }

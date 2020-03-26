@@ -13,7 +13,7 @@ Options:
   -o <file> --output=<file>                         Output file for storing aggregated profiles.
   -c <compartments> --compartments=<compartments>   Comma-separated list of cellular compartments. [default: cells,cytoplasm,nuclei].
   -m <operation> --operation=<operation>            Method for aggregation. [default: mean].
-  -s <strata> --strata=<strata>                     Comma-separated list of grouping variables for aggregation. [default: Image_Metadata_Plate,Image_Metadata_Well]
+  -s <strata> --strata=<strata>                     Comma-separated list of grouping variables for aggregation. [default: Metadata_Plate,Metadata_Well]
   -v <variables> --variables=<variables>            Comma-separated list of observation variables to be aggregated. [default: all]
 
 Arguments:

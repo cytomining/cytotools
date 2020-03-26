@@ -2,8 +2,9 @@ Package: cytotools
 Type: Package
 Title: Command-Line Tools to Get Things Done Using Cytominer
 Version: 0.0.0.9000
-Authors@R: c(person("Tim", "Becker", email = "tbecker@broadinstitute.org", role = "aut"),
-    person("Shantanu", "Singh", email = "shsingh@broadinstitute.org", role = c("aut", "cre"))
+Authors@R: c(person("Tim", "Becker", email = "tbecker@broadinstitute.org", role = c("aut", "cre")),
+    person("Claire", "McQuin", email = "mcquin@broadinstitute.org", role = "aut"),
+    person("Shantanu", "Singh", email = "shsingh@broadinstitute.org", role = "aut")
   )
 Description: Provides command-line tools for processing morphological profiling
     datasets. Most of the functionality is provided using `cytominer`.
@@ -13,20 +14,23 @@ License: BSD_3_clause + file LICENSE
 Encoding: UTF-8
 LazyData: true
 Suggests:
-    testthat,
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 Imports:
     cytominer,
+    docopt(>= 0.4.5),
     DBI (>= 0.7),
     dbplyr (>= 1.1.0),
     dplyr (>= 0.7.2),
+    feather (>= 0.3.1),
     futile.logger (>= 1.4.3),
     purrr (>= 0.2.3),
     readr (>= 1.1.1),
+    rlang (>= 0.1.2),
     RSQLite (>= 2.0),
-    stringr (>= 1.2.0),
-    magrittr (>= 1.5)
+    magrittr (>= 1.5),
+    stringr (>= 1.2.0)
 Remotes: cytomining/cytominer
 VignetteBuilder: knitr
-RoxygenNote: 6.0.1
+RoxygenNote: 6.1.1
