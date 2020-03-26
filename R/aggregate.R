@@ -8,6 +8,7 @@
 #' @param operation         Optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. See \link[cytominer]{aggregate}. default: \code{"mean"}.
 #' @param strata            Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.
 #' @param variables         Optional character vector specifying observation variables. default: \code{"all"}.
+#' @param univariate        Optional boolean specifying whether aggregation function is univariate (vs multivariate). default: \code{"TRUE"}.
 #' @importFrom magrittr %>%
 #' @importFrom magrittr %<>%
 #' @export
@@ -16,7 +17,8 @@ aggregate <- function(sqlite_file,
                       compartments = c("cells", "cytoplasm", "nuclei"),
                       operation = "mean",
                       strata = c("Metadata_Plate", "Metadata_Well"),
-                      variables = "all") {
+                      variables = "all",
+                      univariate = TRUE) {
   db <- DBI::dbConnect(RSQLite::SQLite(), sqlite_file,
                        loadable.extensions = TRUE)
 
@@ -50,7 +52,8 @@ aggregate <- function(sqlite_file,
       population = object,
       variables = variables_,
       strata = strata,
-      operation = operation
+      operation = operation,
+      univariate = univariate
     ) %>%
       dplyr::collect()
   }

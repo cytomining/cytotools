@@ -33,6 +33,9 @@ test_that("`aggregate` aggregates data per well", {
   # inst/extdata/backend/batch0/SQ00015116/SQ00015116.csv
   # does not change
   # inst/scripts/cytotools_aggregate inst/extdata/backend/batch0/SQ00015116/SQ00015116.sqlite -o inst/extdata/backend/batch0/SQ00015116/SQ00015116.csv -m mean
+
+  # inst/scripts/cytotools_aggregate inst/extdata/backend/batch0/SQ00015116/SQ00015116.sqlite -o inst/extdata/backend/batch0/SQ00015116/SQ00015116.csv -u -m whiten
+
 })
 
 test_that(

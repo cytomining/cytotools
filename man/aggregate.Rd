@@ -6,7 +6,8 @@
 \usage{
 aggregate(sqlite_file, output_file, compartments = c("cells",
   "cytoplasm", "nuclei"), operation = "mean",
-  strata = c("Metadata_Plate", "Metadata_Well"), variables = "all")
+  strata = c("Metadata_Plate", "Metadata_Well"), variables = "all",
+  univariate = TRUE)
 }
 \arguments{
 \item{sqlite_file}{SQLite database storing morphological profiles.}
@@ -20,6 +21,8 @@ aggregate(sqlite_file, output_file, compartments = c("cells",
 \item{strata}{Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.}
 
 \item{variables}{Optional character vector specifying observation variables. default: \code{"all"}.}
+
+\item{univariate}{Optional boolean specifying whether aggregation function is univariate (vs multivariate). default: \code{"TRUE"}.}
 }
 \description{
 \code{aggregate} aggregates data based on the specified aggregation method.
