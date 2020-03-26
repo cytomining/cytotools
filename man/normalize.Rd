@@ -11,7 +11,7 @@ normalize(input_file = NULL, output_file = NULL, subset = NULL,
   batch_id = NULL, plate_id = NULL, workspace_dir = ".",
   image_object_join_columns = c("TableNumber", "ImageNumber"),
   well_unique_id_columns = c("Metadata_Plate", "Metadata_Well"),
-  well_unique_id_columns_db_prefix = "Image_")
+  well_unique_id_columns_db_prefix = "")
 }
 \arguments{
 \item{input_file}{Input file with profiles to be normalized. If \code{NULL}, reads from \code{workspace_dir/backend/batch_id/plate_id/plate_id_augmented.csv}. default: \code{NULL}.}
@@ -40,7 +40,7 @@ normalize(input_file = NULL, output_file = NULL, subset = NULL,
 
 \item{well_unique_id_columns}{Columns by which to uniquely identify a well. default: \code{c("Metadata_Plate", "Metadata_Well")}.}
 
-\item{well_unique_id_columns_db_prefix}{Prefix for \code{well_unique_id_columns} in the SQLite db. default: \code{"Image_"}}
+\item{well_unique_id_columns_db_prefix}{Prefix for \code{well_unique_id_columns} in the SQLite db. default: \code{""}}
 }
 \description{
 \code{normalize} normalizes data based on the specified normalization method.
