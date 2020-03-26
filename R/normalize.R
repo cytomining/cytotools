@@ -76,7 +76,7 @@ normalize <- function(input_file = NULL,
   # prepare to load objects by loading image table
   if(sample_single_cell) {
     if (!file.exists(input_sqlite_file)) {
-      stop(paste0(path, " does not exist"))
+      stop(paste0(input_sqlite_file, " does not exist"))
     }
 
     db <- DBI::dbConnect(RSQLite::SQLite(), input_sqlite_file)
@@ -87,7 +87,7 @@ normalize <- function(input_file = NULL,
     # get metadata and copy to db
     metadata <-
       profiles %>%
-      dplyr::select(matches("Metadata_")) %>%
+      dplyr::select(dplyr::matches("Metadata_")) %>%
       dplyr::distinct()
 
     metadata <- dplyr::copy_to(db, metadata)
