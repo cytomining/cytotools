@@ -79,7 +79,10 @@ normalize <- function(input_file = NULL,
       stop(paste0(path, " does not exist"))
     }
 
-    db <- dplyr::src_sqlite(path = input_sqlite_file)
+    db <- DBI::dbConnect(RSQLite::SQLite(), input_sqlite_file)
+
+    # https://github.com/tidyverse/dplyr/issues/3093
+    RSQLite::initExtension(db)
 
     # get metadata and copy to db
     metadata <-
@@ -123,9 +126,13 @@ normalize <- function(input_file = NULL,
 
     # get the sample on which to compute the normalization parameters
     sample %<>%
-      dplyr::filter(eval(parse(text = subset))) %>%
+      dplyr::filter_(subset) %>%
       dplyr::collect(n = Inf) %>%
       dplyr::mutate_at(variables, as.double)
+    # sample %<>%
+    #   dplyr::filter(eval(parse(text = subset))) %>%
+    #   dplyr::collect(n = Inf) %>%
+    #   dplyr::mutate_at(variables, as.double)
 
     # normalize
     normalized <-
