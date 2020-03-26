@@ -68,8 +68,6 @@ normalize <- function(input_file = NULL,
     stop("Prefixes for unique identifiers for wells in image table currently not supported.")
   }
 
-  #well_unique_id_columns_db <- stringr::str_c(well_unique_id_columns_db_prefix, well_unique_id_columns)
-
   # compartment tag converts nuclei to ^Nuclei_
   compartment_tag <-
     function(compartment) paste0("^", stringr::str_to_title(compartment), "_")
