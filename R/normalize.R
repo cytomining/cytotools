@@ -126,13 +126,9 @@ normalize <- function(input_file = NULL,
 
     # get the sample on which to compute the normalization parameters
     sample %<>%
-      dplyr::filter_(subset) %>%
+      dplyr::filter(!!rlang::parse_expr(subset)) %>%
       dplyr::collect(n = Inf) %>%
       dplyr::mutate_at(variables, as.double)
-    # sample %<>%
-    #   dplyr::filter(eval(parse(text = subset))) %>%
-    #   dplyr::collect(n = Inf) %>%
-    #   dplyr::mutate_at(variables, as.double)
 
     # normalize
     normalized <-
