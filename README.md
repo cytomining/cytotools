@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/cytomining/cytotools.png?branch=master)](https://travis-ci.org/cytomining/cytotools) 
+[![Build Status](https://travis-ci.org/cytomining/cytotools.png?branch=master)](https://travis-ci.org/cytomining/cytotools) [![Coverage Status](https://img.shields.io/codecov/c/github/cytomining/cytotools/master.svg)](https://codecov.io/github/cytomining/cytotools?branch=master)
 
 cytotools
 =========
