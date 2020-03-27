@@ -6,7 +6,7 @@ extends <- methods::extends
 'sample
 
 Usage:
-  sample -b <id> -f <pattern> [-n <n>] -o <file> [-w dir]
+  cytotools_sample -b <id> -f <pattern> [-n <n>] -o <file> [-w dir]
 
 Options:
   -h --help                             Show this screen.
