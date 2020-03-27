@@ -6,7 +6,7 @@ extends <- methods::extends
 'normalize
 
 Usage:
-cytotools_normalize [-i <file> -o <file> -s <query> -g -q <file> -c <str> -m <str> -r <str> -b <id> -p <id> -w <dir> -j <str> -k <str> -l <str>]
+  cytotools_normalize [-i <file> -o <file> -s <query> -g -q <file> -c <str> -m <str> -r <str> -b <id> -p <id> -w <dir> -j <str> -k <str> -l <str>]
 
 Options:
   -h --help                                Show this screen.
