@@ -4,14 +4,22 @@
 \alias{normalize}
 \title{Normalize profiles based on given control subset}
 \usage{
-normalize(input_file = NULL, output_file = NULL, subset = NULL,
-  sample_single_cell = FALSE, input_sqlite_file = NULL,
+normalize(
+  input_file = NULL,
+  output_file = NULL,
+  subset = NULL,
+  sample_single_cell = FALSE,
+  input_sqlite_file = NULL,
   compartments = c("cells", "cytoplasm", "nuclei"),
-  operation = "robustize", strata = c("Metadata_Plate"),
-  batch_id = NULL, plate_id = NULL, workspace_dir = ".",
+  operation = "robustize",
+  strata = c("Metadata_Plate"),
+  batch_id = NULL,
+  plate_id = NULL,
+  workspace_dir = ".",
   image_object_join_columns = c("TableNumber", "ImageNumber"),
   well_unique_id_columns = c("Metadata_Plate", "Metadata_Well"),
-  well_unique_id_columns_db_prefix = "")
+  well_unique_id_columns_db_prefix = ""
+)
 }
 \arguments{
 \item{input_file}{Input file with profiles to be normalized. If \code{NULL}, reads from \code{workspace_dir/backend/batch_id/plate_id/plate_id_augmented.csv}. default: \code{NULL}.}

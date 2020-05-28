@@ -4,8 +4,7 @@
 \alias{sample}
 \title{Sample selects replicates across specified plates.}
 \usage{
-sample(batch_id, pattern, output, replicates = NULL,
-  workspace_dir = ".")
+sample(batch_id, pattern, output, replicates = NULL, workspace_dir = ".")
 }
 \arguments{
 \item{batch_id}{Batch ID.}

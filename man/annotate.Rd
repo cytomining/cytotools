@@ -4,9 +4,16 @@
 \alias{annotate}
 \title{Add plate and well metadata.}
 \usage{
-annotate(batch_id, plate_id, cell_id = NULL, external_metadata = NULL,
-  format_broad_cmap = FALSE, output = NULL,
-  perturbation_mode = "chemical", workspace_dir = ".")
+annotate(
+  batch_id,
+  plate_id,
+  cell_id = NULL,
+  external_metadata = NULL,
+  format_broad_cmap = FALSE,
+  output = NULL,
+  perturbation_mode = "chemical",
+  workspace_dir = "."
+)
 }
 \arguments{
 \item{batch_id}{Batch ID.}

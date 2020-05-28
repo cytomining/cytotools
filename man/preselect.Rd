@@ -4,9 +4,16 @@
 \alias{preselect}
 \title{Create a list of variables using various variable selection methods}
 \usage{
-preselect(input, operations, replicates = NULL, batch_id = NULL,
-  subset = NULL, cores = NULL, output_dir = NULL,
-  workspace_dir = ".")
+preselect(
+  input,
+  operations,
+  replicates = NULL,
+  batch_id = NULL,
+  subset = NULL,
+  cores = NULL,
+  output_dir = NULL,
+  workspace_dir = "."
+)
 }
 \arguments{
 \item{input}{Test data on which to perform variable selection operations. Must be CSV, rds, or feather.}
