@@ -30,6 +30,6 @@ cytotools::aggregate(sqlite_file = opts[["sqlite_file"]],
                      operation = opts[["operation"]],
                      variables = stringr::str_split(opts[["variables"]], ",")[[1]],
                      strata = stringr::str_split(opts[["strata"]], ",")[[1]],
-                     image_variables = ifelse(is.null(opts[["image_variables"]]), NULL, stringr::str_split(opts[["image_variables"]], ",")[[1]]),
+                     image_variables = switch(is.null(opts[["image_variables"]]), NULL, stringr::str_split(opts[["image_variables"]], ",")[[1]]),
                      image_table = opts[["image_table"]],
                      univariate = !opts[["multivariate"]])
