@@ -16,7 +16,7 @@ write_gct(
 The input \code{x}, invisibly.
 }
 \description{
-@param x ...
- @param path ...
- @param channels ...
+@param x A data frame of CellProfiler readouts to write to disk
+ @param path Path or connection to write to
+ @param channels Image channels present in the CellProfiler data frame
 }

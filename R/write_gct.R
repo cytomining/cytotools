@@ -1,12 +1,14 @@
 #' Write CellProfiler data to gct file.
 #'
-#'  @param x ...
-#'  @param path ...
-#'  @param channels ...
-#'
+#'  @param x A data frame of CellProfiler readouts to write to disk
+#'  @param path Path or connection to write to
+#'  @param channels Image channels present in the CellProfiler data frame
 #'
 #' @return The input \code{x}, invisibly.
 #'
+#' @importFrom magrittr %<>%
+#' @importFrom magrittr %>%
+#' @export
 write_gct <-
   function(x,
            path,
@@ -22,7 +24,7 @@ write_gct <-
 
     # id is hash of metadata columns
     x %<>%
-      tidyr::unite("id", matches("Metadata_"), remove = F) %>%
+      tidyr::unite("id", dplyr::matches("Metadata_"), remove = F) %>%
       dplyr::rowwise() %>%
       dplyr::mutate(id = digest::digest(id)) %>%
       dplyr::ungroup()
@@ -46,7 +48,7 @@ write_gct <-
 
     column_annotations <-
       x %>%
-      dplyr::select(matches("^id$|^Metadata_"))
+      dplyr::select(dplyr::matches("^id$|^Metadata_"))
 
     row_annotations <-
       tibble::data_frame(cp_feature_name = row.names(measurements))
@@ -98,7 +100,7 @@ write_gct <-
       tibble::rownames_to_column() %>%
       dplyr::mutate(rowname = stringr::str_replace(rowname, "Metadata_", ""))
 
-    filler <- row_annotations %>% slice(0)
+    filler <- row_annotations %>% dplyr::slice(0)
     filler[1, ] <- colnames(filler)
     filler[2:nrow(column_annotations_df), ] <- NA
 
