@@ -76,7 +76,7 @@ test_that(
 
     actual <- readr::read_csv(aggregated_csv)
 
-    expect_equal(actual, expected)
+    expect_equal(actual, expected, check.attributes = FALSE)
 
     file.remove(aggregated_csv)
   }
@@ -109,7 +109,7 @@ test_that("`aggregate` aggregates data per well and includes image-level variabl
 
   actual <- readr::read_csv(aggregated_csv) %>% dplyr::select(-Metadata_Site)
 
-  expect_equal(actual, expected)
+  expect_equal(actual, expected, check.attributes = FALSE)
 
   expect_equal(
     readr::read_csv(aggregated_csv) %>% dplyr::pull(Metadata_Site),
