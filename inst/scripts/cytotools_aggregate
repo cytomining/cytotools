@@ -6,7 +6,7 @@ extends <- methods::extends
 'aggregate
 
 Usage:
-  cytotools_aggregate <sqlite_file> -o <file>  [-c <compartments>] [-m <operation>] [-s <strata>] [-v <variables>] [-f <variables>] [-u]
+  cytotools_aggregate <sqlite_file> -o <file>  [-c <compartments>] [-m <operation>] [-s <strata>] [-t <imagetable>] [-v <variables>] [-f <variables>] [-u]
 
 Options:
   -h --help                             Show this screen.
