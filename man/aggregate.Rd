@@ -4,10 +4,16 @@
 \alias{aggregate}
 \title{Aggregate data based on given grouping.}
 \usage{
-aggregate(sqlite_file, output_file, compartments = c("cells",
-  "cytoplasm", "nuclei"), operation = "mean",
+aggregate(
+  sqlite_file,
+  output_file,
+  compartments = c("cells", "cytoplasm", "nuclei"),
+  operation = "mean",
   strata = c("Metadata_Plate", "Metadata_Well"),
-  image_variables = NULL, variables = "all", univariate = TRUE)
+  image_variables = NULL,
+  variables = "all",
+  univariate = TRUE
+)
 }
 \arguments{
 \item{sqlite_file}{SQLite database storing morphological profiles.}
