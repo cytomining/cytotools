@@ -50,7 +50,7 @@ aggregate <- function(sqlite_file,
         )
     }
 
-    futile.logger::flog.info(paste0("Started aggregating ", compartment))
+    futile.logger::flog.info(paste0("Started aggregating ", compartment, " ..."))
 
     cytominer::aggregate(
       population = object,
@@ -67,7 +67,7 @@ aggregate <- function(sqlite_file,
     purrr::map(aggregate_objects) %>%
     purrr::reduce(dplyr::inner_join, by = strata)
 
-  futile.logger::flog.info(paste0("Started aggregating images"))
+  futile.logger::flog.info(paste0("Started aggregating images ..."))
 
   if(!is.null(image_variables)) {
     aggregate_images <-
