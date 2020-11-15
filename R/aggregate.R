@@ -7,7 +7,8 @@
 #' @param compartments      Optional character vector specifying cellular compartments. default: \code{c("cells", "cytoplasm", "nuclei")}.
 #' @param operation         Optional character string specifying method for aggregation, e.g. \code{"mean"}, \code{"median"}, \code{"mean+sd"}. See \link[cytominer]{aggregate}. default: \code{"mean"}.
 #' @param strata            Character vector specifying grouping variables for aggregation. default: \code{c("Metadata_Plate", "Metadata_Well")}.
-#' @param image_variables   Character vector specifying grouping variables for aggregation. default: \code{NULL}.
+#' @param image_table       Optional character string image table name. default: \code{"image"}.
+#' @param image_variables   Optional character vector specifying observation variables in image table. default: \code{NULL}.
 #' @param variables         Optional character vector specifying observation variables. default: \code{"all"}.
 #' @param univariate        Optional boolean specifying whether aggregation function is univariate (vs multivariate). default: \code{"TRUE"}.
 #' @importFrom magrittr %>%
@@ -18,6 +19,7 @@ aggregate <- function(sqlite_file,
                       compartments = c("cells", "cytoplasm", "nuclei"),
                       operation = "mean",
                       strata = c("Metadata_Plate", "Metadata_Well"),
+                      image_table = "image",
                       image_variables = NULL,
                       variables = "all",
                       univariate = TRUE) {
@@ -70,7 +72,7 @@ aggregate <- function(sqlite_file,
   if(!is.null(image_variables)) {
     aggregate_images <-
       cytominer::aggregate(
-        population = dplyr::tbl(src = db, "image"),
+        population = dplyr::tbl(src = db, image_table),
         variables = image_variables,
         strata = strata,
         operation = operation,
