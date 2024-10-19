@@ -222,9 +222,9 @@ annotate <- function(batch_id, plate_id,
 
   metadata_cols <- stringr::str_subset(names(profiles), "^Metadata_")
 
-  feature_cols <- stringr::str_subset(
+  feature_cols <- setdiff(
     names(profiles),
-    "^Cells_|^Cytoplasm_|^Nuclei_"
+    metadata_cols
   )
 
   all_cols <- c(metadata_cols, feature_cols)
